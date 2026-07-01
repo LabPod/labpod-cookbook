@@ -16,8 +16,10 @@ imported separately — see [How to use a cookbook](#how-to-use-a-cookbook) belo
 
 ## How to use a cookbook
 
-1. **Import the environment.** Download `<cookbook>.labpod-bundle.tar` from the
-   [latest release](../../releases/latest) (or build it yourself — see below), then import it
+1. **Import the environment.** Download `dist/<cookbook>.labpod-bundle.tar` - either from this
+   repo directly, or from its raw URL:
+   `https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/<cookbook>.labpod-bundle.tar`
+   (that URL also works with LabPod's "import from URL" option, once that ships). Then import it
    in LabPod: **Images → My templates → Import**. This creates a private, disabled template.
 2. **Build it.** Select the imported template and click **Build**. This builds the Dockerfile
    once; the image is reused by every workspace you create from it afterward.
@@ -54,9 +56,14 @@ Each cookbook directory separates the bundle from the notebook:
 
 `scripts/build-bundle.sh <cookbook>` packs `<cookbook>/template/`'s `bundle.json`, `README.md`,
 and `context/` into `dist/<cookbook>.labpod-bundle.tar` (a plain, uncompressed POSIX tar -
-LabPod's bundle decoder does not accept gzip). CI runs the same script for every cookbook on
-each tagged release and attaches the resulting `.tar` files as release assets, so most users
-never need to run it themselves.
+LabPod's bundle decoder does not accept gzip).
+
+Built tars are committed to this repo under `dist/` rather than published only as release
+assets - LabPod's own format caps a bundle tar at 1 MiB, so this is cheap, and it means every
+tar is reachable at a stable `raw.githubusercontent.com` URL that a browser can `fetch()`
+directly (GitHub release-asset download URLs don't send CORS headers, so they don't work for
+that; committed repo files do). If you edit a cookbook's `template/`, rebuild and commit the
+updated tar as part of the same PR.
 
 ## Contributing a cookbook
 
