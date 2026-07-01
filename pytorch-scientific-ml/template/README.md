@@ -1,8 +1,8 @@
 # PyTorch Scientific ML (Cookbook)
 
-Pull-only environment - `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11`, no custom build.
-Same image as LabPod's built-in "PyTorch JupyterLab" template, packaged standalone so these
-cookbooks work even on a LabPod install where that managed template is disabled.
+Builds from `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11` (same base image as LabPod's
+built-in "PyTorch JupyterLab" template) plus `tensorboard` - see `context/requirements.txt`.
+This has a real build step: after importing, click **Build** before creating a workspace.
 
 Shared by several notebooks - build this template once, then run any of them:
 
@@ -24,3 +24,10 @@ git clone https://github.com/LabPod/labpod-cookbook /work/labpod-cookbook
 
 Then open any notebook under
 `/work/labpod-cookbook/pytorch-scientific-ml/notebooks/` in JupyterLab.
+
+## Watching training in TensorBoard
+
+`neural-operator.ipynb`, `pinn.ipynb`, `unet.ipynb`, and `diffusion.ipynb` all log their
+training curves to `/work/runs/<notebook-name>`. TensorBoard is already installed (baked in by
+this template's Dockerfile) - just open the **TensorBoard** app from LabPod's Apps page
+(default log directory `/work/runs` shows every notebook's runs at once).

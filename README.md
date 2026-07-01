@@ -13,7 +13,7 @@ below.
 
 | Bundle | Notebook | Notes |
 |---|---|---|
-| [`pytorch-scientific-ml/`](pytorch-scientific-ml/) ([`.tar`](dist/pytorch-scientific-ml.labpod-bundle.tar)) | [gpu-basics](pytorch-scientific-ml/notebooks/gpu-basics.ipynb) | Pull-only image, no custom build. Confirm the GPU is visible, CPU-vs-GPU benchmark, tiny training loop. Start here. |
+| [`pytorch-scientific-ml/`](pytorch-scientific-ml/) ([`.tar`](dist/pytorch-scientific-ml.labpod-bundle.tar)) | [gpu-basics](pytorch-scientific-ml/notebooks/gpu-basics.ipynb) | Confirm the GPU is visible, CPU-vs-GPU benchmark, tiny training loop. Start here. |
 | same bundle | [neural-operator](pytorch-scientific-ml/notebooks/neural-operator.ipynb) | Fourier Neural Operator learning the 1D heat equation's solution operator, scored against the exact closed-form solution. |
 | same bundle | [pinn](pytorch-scientific-ml/notebooks/pinn.ipynb) | Physics-informed neural network solving a damped harmonic oscillator, scored against the analytic solution. |
 | same bundle | [unet](pytorch-scientific-ml/notebooks/unet.ipynb) | Small U-Net for synthetic circle segmentation, scored with IoU. |
@@ -21,7 +21,9 @@ below.
 | [`huggingface/`](huggingface/) ([`.tar`](dist/huggingface.labpod-bundle.tar)) | [notebook](huggingface/notebook.ipynb) | Sentiment classification + text generation with `transformers` pipelines. Needs internet access at runtime to download model weights (the other bundles don't). |
 
 All `pytorch-scientific-ml` notebooks use synthetic/toy data generated in the notebook itself -
-no dataset download required, so they work on an offline / air-gapped workspace too.
+no dataset download required, so they work on an offline / air-gapped workspace too. Its four
+training notebooks (everything but `gpu-basics`) log to TensorBoard - the bundle's Dockerfile
+bakes it in, so the TensorBoard app just works after building.
 
 ## How to use a cookbook
 

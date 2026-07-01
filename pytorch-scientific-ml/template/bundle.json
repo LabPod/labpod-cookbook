@@ -3,10 +3,13 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-pytorch-scientific-ml",
   "name": "PyTorch Scientific ML (Cookbook)",
-  "description": "Plain PyTorch JupyterLab environment, no extra dependencies. Shared by several labpod-cookbook notebooks (GPU basics, neural operator, PINN, U-Net, diffusion) - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
+  "description": "PyTorch JupyterLab plus tensorboard (see context/requirements.txt), built from this template's Dockerfile. Shared by several labpod-cookbook notebooks (GPU basics, neural operator, PINN, U-Net, diffusion), all of which log training curves for the TensorBoard launcher - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
   "type": "jupyter",
   "image": {
-    "ref": "quay.io/jupyter/pytorch-notebook:cuda12-python-3.11"
+    "ref": "localhost/labpod-cookbook/pytorch-scientific-ml:latest",
+    "dockerfile": {
+      "path": "Dockerfile"
+    }
   },
   "defaults": {
     "cpu": 4,
@@ -31,6 +34,20 @@
       "probe_command": "jupyter",
       "install_hint": "uv pip install --system jupyterlab",
       "option_schema_json": "{\"fields\":[]}",
+      "proxy_strip_prefix": false
+    },
+    {
+      "name": "tensorboard",
+      "label": "TensorBoard",
+      "container_port": 6006,
+      "protocol": "http",
+      "base_path_arg": "--tensorboard.path_prefix",
+      "is_primary": false,
+      "command_template": "tensorboard --host=0.0.0.0 --port=${HOST_PORT} --path_prefix=${BASE_PATH} --logdir=${LOGDIR}",
+      "readiness_path": "/",
+      "probe_command": "tensorboard",
+      "install_hint": "already installed by this template's Dockerfile",
+      "option_schema_json": "{\"fields\":[{\"name\":\"LOGDIR\",\"type\":\"directory\",\"label\":\"Log directory\",\"default\":\"/work/runs\",\"help\":\"Every notebook in this cookbook logs to /work/runs/<name> - pick the parent runs/ folder to see all of them, or a specific subfolder for just one.\"}]}",
       "proxy_strip_prefix": false
     }
   ]
