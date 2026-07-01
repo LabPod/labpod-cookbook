@@ -1,0 +1,20 @@
+{
+  "schema_version": "1",
+  "kind": "labpod.template.bundle",
+  "id_hint": "cookbook-gromacs-md",
+  "name": "GROMACS Molecular Dynamics (Cookbook)",
+  "description": "The official gromacs/gromacs Docker image (CUDA-enabled build, runs fine CPU-only too if no GPU is allocated), no custom build. Terminal-only - there's no web app, you run gmx commands directly through LabPod's Terminal. See github.com/LabPod/labpod-cookbook/tree/main/gromacs-md.",
+  "type": "terminal",
+  "image": {
+    "ref": "docker.io/gromacs/gromacs:gmx-2022.2-cuda-11.6.0-avx"
+  },
+  "defaults": {
+    "cpu": 4,
+    "memory_gb": 8,
+    "gpu_required": false,
+    "gpu_default": true,
+    "sleep_entrypoint": true
+  },
+  "requires_eula": false,
+  "ports": []
+}

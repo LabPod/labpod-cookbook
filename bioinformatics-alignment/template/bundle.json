@@ -1,0 +1,40 @@
+{
+  "schema_version": "1",
+  "kind": "labpod.template.bundle",
+  "id_hint": "cookbook-bioinformatics-alignment",
+  "name": "Bioinformatics: Read Alignment (Cookbook)",
+  "description": "CPU-only JupyterLab (quay.io/jupyter/scipy-notebook base) plus samtools and bwa, built from this template's Dockerfile. Covers the most common shared-workstation genomics workload: aligning sequencing reads to a reference with BWA, then sorting/indexing/inspecting the result with samtools. See github.com/LabPod/labpod-cookbook/tree/main/bioinformatics-alignment.",
+  "type": "jupyter",
+  "image": {
+    "ref": "localhost/labpod-cookbook/bioinformatics-alignment:latest",
+    "dockerfile": {
+      "path": "Dockerfile"
+    }
+  },
+  "defaults": {
+    "cpu": 4,
+    "memory_gb": 8,
+    "gpu_required": false,
+    "gpu_default": false,
+    "app_port": 8888,
+    "base_url_arg": "--ServerApp.base_url",
+    "sleep_entrypoint": true
+  },
+  "requires_eula": false,
+  "ports": [
+    {
+      "name": "jupyter",
+      "label": "JupyterLab",
+      "container_port": 8888,
+      "protocol": "http",
+      "base_path_arg": "--ServerApp.base_url",
+      "is_primary": true,
+      "command_template": "jupyter lab --ServerApp.ip=0.0.0.0 --ServerApp.port=${HOST_PORT} --ServerApp.open_browser=False --ServerApp.token=${AUTH_TOKEN} --ServerApp.password= --ServerApp.base_url=${BASE_PATH} --ServerApp.root_dir=/work",
+      "readiness_path": "/lab",
+      "probe_command": "jupyter",
+      "install_hint": "uv pip install --system jupyterlab",
+      "option_schema_json": "{\"fields\":[]}",
+      "proxy_strip_prefix": false
+    }
+  ]
+}
