@@ -30,31 +30,33 @@ imported separately — see [How to use a cookbook](#how-to-use-a-cookbook) belo
 5. Open the cookbook's notebook from `/work/labpod-cookbook/<cookbook>/notebook.ipynb` in
    JupyterLab and run it.
 
-Notebooks are not bundled inside the template import — LabPod's bundle format only allows a
-small whitelist of build-context file types (`.py`, `.txt`, `.yaml`, etc., no `.ipynb`), by
-design: bundles describe the *environment*, not your working files. Environments should be
-built once and reused; notebooks and data belong in `/work`, which is what actually survives a
-workspace stop/start.
+The notebook is not part of the template import — LabPod's bundle format only allows a small
+whitelist of build-context file types (`.py`, `.txt`, `.yaml`, etc., no `.ipynb`), by design:
+bundles describe the *environment*, not your working files. Environments should be built once
+and reused; notebooks and data belong in `/work`, which is what actually survives a workspace
+stop/start. The directory layout below keeps that split explicit: everything under `template/`
+is what gets bundled, the notebook sits outside it.
 
 ## Building a bundle yourself
 
-Each cookbook directory is the *unpacked* form of its LabPod bundle:
+Each cookbook directory separates the bundle from the notebook:
 
 ```
 <cookbook>/
-  bundle.json
-  README.md
-  context/
-    Dockerfile
-    requirements.txt
-  notebook.ipynb        # not part of the bundle - lives in /work at runtime, see above
+  template/
+    bundle.json
+    README.md
+    context/
+      Dockerfile
+      requirements.txt
+  notebook.ipynb        # outside template/ - not part of the bundle, lives in /work at runtime
 ```
 
-`scripts/build-bundle.sh <cookbook>` packs `bundle.json`, `README.md`, and `context/` into
-`dist/<cookbook>.labpod-bundle.tar` (a plain, uncompressed POSIX tar - LabPod's bundle decoder
-does not accept gzip). CI runs the same script for every cookbook on each tagged release and
-attaches the resulting `.tar` files as release assets, so most users never need to run it
-themselves.
+`scripts/build-bundle.sh <cookbook>` packs `<cookbook>/template/`'s `bundle.json`, `README.md`,
+and `context/` into `dist/<cookbook>.labpod-bundle.tar` (a plain, uncompressed POSIX tar -
+LabPod's bundle decoder does not accept gzip). CI runs the same script for every cookbook on
+each tagged release and attaches the resulting `.tar` files as release assets, so most users
+never need to run it themselves.
 
 ## Contributing a cookbook
 
