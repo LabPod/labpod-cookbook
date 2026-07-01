@@ -5,8 +5,9 @@ at junior researchers who want to go from "I have a GPU workstation" to "I'm tra
 in a few minutes.
 
 Most top-level directories are a **LabPod template bundle** (environment: base image,
-optionally a `Dockerfile` + `requirements.txt`) plus one or more **starter notebooks** (the
-actual research content), imported separately — see
+optionally a `Dockerfile` + `requirements.txt`) plus one or more **starter notebooks or scripts**
+(the actual research content - usually a `.ipynb`, but a plain `.m`/`.c`/`.cu` file or a
+walkthrough doc where that fits the tool better), imported separately — see
 [How to use a cookbook](#how-to-use-a-cookbook) below. A few instead reuse one of LabPod's
 existing built-in templates and ship only example code - see `parallel-programming/`.
 
@@ -25,6 +26,8 @@ existing built-in templates and ship only example code - see `parallel-programmi
 | same bundle | [ddp_basics](pytorch-scientific-ml/notebooks/ddp_basics.py) | Multi-GPU training with `DistributedDataParallel`. A script, not a notebook - run via `torchrun` from a terminal. |
 | [`huggingface/`](huggingface/) ([`.tar`](dist/huggingface.labpod-bundle.tar)) | [notebook](huggingface/notebook.ipynb) | Sentiment classification + text generation with `transformers` pipelines. Needs internet access at runtime to download model weights (the other bundles don't). |
 | [`parallel-programming/`](parallel-programming/) (no bundle - uses LabPod's built-in **Parallel Programming (CUDA/MPI/OpenMP)** template) | [openmp](parallel-programming/openmp/pi_openmp.c) / [mpi](parallel-programming/mpi/pi_mpi.c) / [cuda](parallel-programming/cuda/vector_add.cu) | The same problem (or the CUDA equivalent) solved with three different parallelism models: shared-memory threads, distributed-memory processes, GPU SIMT. |
+| [`openfoam-cfd/`](openfoam-cfd/) ([`.tar`](dist/openfoam-cfd.labpod-bundle.tar)) | [WALKTHROUGH](openfoam-cfd/WALKTHROUGH.md) | The official OpenCFD image, terminal-only (no web app). Runs OpenFOAM's own lid-driven-cavity tutorial. Not run against a real OpenFOAM install while writing it - see the walkthrough's verification note. |
+| [`matlab-deep-learning/`](matlab-deep-learning/) ([`.tar`](dist/matlab-deep-learning.labpod-bundle.tar)) | [digit_classifier.m](matlab-deep-learning/digit_classifier.m) | MATLAB (with Deep Learning Toolbox) via matlab-proxy. **Requires your own MATLAB license** (Deep Learning + Parallel Computing Toolbox) - unusable without one. Not run against a real MATLAB install - see the template README's verification note. |
 
 All `pytorch-scientific-ml` notebooks use synthetic/toy data generated in the notebook itself -
 no dataset download required, so they work on an offline / air-gapped workspace too. Every

@@ -1,0 +1,20 @@
+{
+  "schema_version": "1",
+  "kind": "labpod.template.bundle",
+  "id_hint": "cookbook-openfoam-cfd",
+  "name": "OpenFOAM CFD (Cookbook)",
+  "description": "The official OpenCFD OpenFOAM Docker image (runtime + tutorials, no custom build). Terminal-only - there's no web app here, you work entirely through LabPod's Terminal running OpenFOAM's own command-line tools (blockMesh, icoFoam, etc.). See github.com/LabPod/labpod-cookbook/tree/main/openfoam-cfd.",
+  "type": "terminal",
+  "image": {
+    "ref": "docker.io/opencfd/openfoam-default:2512"
+  },
+  "defaults": {
+    "cpu": 4,
+    "memory_gb": 8,
+    "gpu_required": false,
+    "gpu_default": false,
+    "sleep_entrypoint": true
+  },
+  "requires_eula": false,
+  "ports": []
+}

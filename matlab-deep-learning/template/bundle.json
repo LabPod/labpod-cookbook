@@ -1,0 +1,39 @@
+{
+  "schema_version": "1",
+  "kind": "labpod.template.bundle",
+  "id_hint": "cookbook-matlab-deep-learning",
+  "name": "MATLAB Deep Learning (Cookbook)",
+  "description": "MATLAB in the browser via MathWorks matlab-proxy, on the mathworks/matlab-deep-learning base image (Deep Learning Toolbox included - LabPod's built-in MATLAB template uses the plain matlab image, which doesn't have it). Bring your own MATLAB license, with Deep Learning Toolbox and Parallel Computing Toolbox entitlements specifically. Build this template's bundled Dockerfile, then enable it. Opt-in; requires EULA/license acknowledgement.",
+  "type": "matlab",
+  "image": {
+    "ref": "localhost/labpod-cookbook/matlab-deep-learning:r2024b",
+    "dockerfile": {
+      "path": "Dockerfile"
+    }
+  },
+  "defaults": {
+    "cpu": 4,
+    "memory_gb": 8,
+    "gpu_required": false,
+    "gpu_default": false,
+    "app_port": 8888,
+    "sleep_entrypoint": true
+  },
+  "requires_eula": true,
+  "terms_url": "https://www.mathworks.com/help/install/license/eula.html",
+  "ports": [
+    {
+      "name": "matlab",
+      "label": "MATLAB",
+      "container_port": 8888,
+      "protocol": "http",
+      "is_primary": true,
+      "command_template": "env MWI_APP_PORT=${HOST_PORT} MWI_BASE_URL=${BASE_PATH_NO_SLASH} MWI_ENABLE_TOKEN_AUTH=False matlab-proxy-app",
+      "readiness_path": "/",
+      "probe_command": "matlab-proxy-app",
+      "install_hint": "Build this template's bundled Dockerfile (mathworks/matlab-deep-learning base + matlab-proxy) and enable this template after the local image exists",
+      "option_schema_json": "{\"fields\":[]}",
+      "proxy_strip_prefix": false
+    }
+  ]
+}
