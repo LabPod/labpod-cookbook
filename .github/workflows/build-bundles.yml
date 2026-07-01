@@ -1,0 +1,59 @@
+name: Build bundle tars
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "*/template/**"
+      - "scripts/build-bundle.sh"
+      - ".github/workflows/build-bundles.yml"
+  workflow_dispatch: {}
+
+# The push this workflow makes only touches dist/, which isn't in the
+# trigger paths above, so it does not retrigger itself.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build every cookbook's bundle tar
+        run: |
+          set -euo pipefail
+          for dir in */; do
+            cookbook="${dir%/}"
+            if [[ -f "$cookbook/template/bundle.json" ]]; then
+              echo "building $cookbook"
+              ./scripts/build-bundle.sh "$cookbook"
+            fi
+          done
+
+      - name: Sanity-check each tar
+        run: |
+          set -euo pipefail
+          max_bytes=$((1024 * 1024))
+          for tar in dist/*.labpod-bundle.tar; do
+            [[ -e "$tar" ]] || continue
+            size=$(stat -c%s "$tar")
+            if (( size > max_bytes )); then
+              echo "error: $tar is $size bytes, over LabPod's 1 MiB bundle cap" >&2
+              exit 1
+            fi
+            tar -tf "$tar" | grep -qx 'bundle.json' || { echo "error: $tar missing bundle.json" >&2; exit 1; }
+            tar -tf "$tar" | grep -qx 'README.md' || { echo "error: $tar missing README.md" >&2; exit 1; }
+          done
+
+      - name: Commit updated tars
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist/
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "chore: rebuild bundle tars [skip ci]"
+            git push
+          fi
