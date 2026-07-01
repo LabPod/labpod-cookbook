@@ -1,12 +1,12 @@
 {
   "schema_version": "1",
   "kind": "labpod.template.bundle",
-  "id_hint": "cookbook-scientific-computing",
-  "name": "Scientific Computing (Cookbook)",
-  "description": "CPU-only JupyterLab (quay.io/jupyter/scipy-notebook base - no CUDA needed here) plus pyscf, qiskit/qiskit-aer, rdkit, ase, and obspy, built from this template's Dockerfile. Five unrelated fields sharing one lightweight, pure-Python environment: quantum chemistry, quantum computing, cheminformatics, materials science, and seismology. See github.com/LabPod/labpod-cookbook/tree/main/scientific-computing.",
+  "id_hint": "cookbook-materials-science",
+  "name": "Materials Science (Cookbook)",
+  "description": "CPU-only JupyterLab (quay.io/jupyter/scipy-notebook base - no CUDA needed) plus ase, built from this template's Dockerfile. Crystal structure, lattice constants, and geometry optimization with ASE (Atomic Simulation Environment). See github.com/LabPod/labpod-cookbook/tree/main/materials-science.",
   "type": "jupyter",
   "image": {
-    "ref": "localhost/labpod-cookbook/scientific-computing:latest",
+    "ref": "localhost/labpod-cookbook/materials-science:latest",
     "dockerfile": {
       "path": "Dockerfile"
     }

@@ -29,11 +29,11 @@ existing built-in templates and ship only example code - see `parallel-programmi
 | [`openfoam-cfd/`](openfoam-cfd/) ([`.tar`](dist/openfoam-cfd.labpod-bundle.tar)) | [WALKTHROUGH](openfoam-cfd/WALKTHROUGH.md) | The official OpenCFD image, terminal-only (no web app). Runs OpenFOAM's own lid-driven-cavity tutorial. Not run against a real OpenFOAM install while writing it - see the walkthrough's verification note. |
 | [`matlab-deep-learning/`](matlab-deep-learning/) ([`.tar`](dist/matlab-deep-learning.labpod-bundle.tar)) | [digit_classifier.m](matlab-deep-learning/digit_classifier.m) | MATLAB (with Deep Learning Toolbox) via matlab-proxy. **Requires your own MATLAB license** (Deep Learning + Parallel Computing Toolbox) - unusable without one. Not run against a real MATLAB install - see the template README's verification note. |
 | [`gromacs-md/`](gromacs-md/) ([`.tar`](dist/gromacs-md.labpod-bundle.tar)) | [README](gromacs-md/template/README.md) points to the canonical external tutorial | The official GROMACS image, terminal-only. No self-contained tutorial here - a real MD protocol is a long multi-step pipeline too easy to get subtly wrong unverified, so this points at the actively-maintained, de facto standard external GROMACS tutorial instead. |
-| [`scientific-computing/`](scientific-computing/) ([`.tar`](dist/scientific-computing.labpod-bundle.tar)) | [pyscf-quantum-chemistry](scientific-computing/notebooks/pyscf-quantum-chemistry.ipynb) | Electronic structure with PySCF - H2 bond energy, verified against the textbook value and a bond-length scan that finds the right minimum. |
-| same bundle | [qiskit-basics](scientific-computing/notebooks/qiskit-basics.ipynb) | Quantum circuit simulation with Qiskit - a Bell state (entanglement) and Grover's search, both verified numerically. |
-| same bundle | [rdkit-cheminformatics](scientific-computing/notebooks/rdkit-cheminformatics.ipynb) | Molecule parsing, descriptors, and Tanimoto similarity search with RDKit, verified against known chemistry (aspirin closer to ibuprofen than to caffeine). |
-| same bundle | [ase-materials-science](scientific-computing/notebooks/ase-materials-science.ipynb) | Crystal structure and lattice-constant optimization with ASE, verified within ~1% of the experimental Cu lattice constant. |
-| same bundle | [obspy-seismology](scientific-computing/notebooks/obspy-seismology.ipynb) | Real seismic waveform processing (detrend, bandpass filter) with ObsPy's bundled example data, verified for real. |
+| [`quantum-chemistry/`](quantum-chemistry/) ([`.tar`](dist/quantum-chemistry.labpod-bundle.tar)) | [notebook](quantum-chemistry/notebook.ipynb) | Electronic structure with PySCF - H2 bond energy, verified against the textbook value and a bond-length scan that finds the right minimum. |
+| [`quantum-computing/`](quantum-computing/) ([`.tar`](dist/quantum-computing.labpod-bundle.tar)) | [notebook](quantum-computing/notebook.ipynb) | Quantum circuit simulation with Qiskit - a Bell state (entanglement) and Grover's search, both verified numerically. |
+| [`cheminformatics/`](cheminformatics/) ([`.tar`](dist/cheminformatics.labpod-bundle.tar)) | [notebook](cheminformatics/notebook.ipynb) | Molecule parsing, descriptors, and Tanimoto similarity search with RDKit, verified against known chemistry (aspirin closer to ibuprofen than to caffeine). |
+| [`materials-science/`](materials-science/) ([`.tar`](dist/materials-science.labpod-bundle.tar)) | [notebook](materials-science/notebook.ipynb) | Crystal structure and lattice-constant optimization with ASE, verified within ~1% of the experimental Cu lattice constant. |
+| [`seismology/`](seismology/) ([`.tar`](dist/seismology.labpod-bundle.tar)) | [notebook](seismology/notebook.ipynb) | Real seismic waveform processing (detrend, bandpass filter) with ObsPy's bundled example data, verified for real. |
 | [`bioinformatics-alignment/`](bioinformatics-alignment/) ([`.tar`](dist/bioinformatics-alignment.labpod-bundle.tar)) | [alignment-basics](bioinformatics-alignment/notebooks/alignment-basics.ipynb) | Read alignment with `bwa` + `samtools` on synthetic reference/reads (data generation verified; the CLI tools themselves were not run in development - see the template README). |
 
 All `pytorch-scientific-ml` notebooks use synthetic/toy data generated in the notebook itself -
@@ -101,10 +101,12 @@ every bundle's tar automatically on push, so you generally don't need to run thi
 
 ## Contributing a cookbook
 
-Prefer adding a **notebook** to an existing bundle when the environment already has what you
-need (see `pytorch-scientific-ml/notebooks/` - eight notebooks and a script, one shared
-plain-PyTorch environment; `scientific-computing/notebooks/` - five notebooks across five
-unrelated fields, one shared CPU/pure-Python environment). Only add a new bundle when you need
-different dependencies (a new `Dockerfile` + `requirements.txt`, like `huggingface/`). Keep
-environments minimal and shared where dependencies overlap, rather than one bundle per
-notebook.
+Prefer adding a **notebook** to an existing bundle only when it genuinely needs the same
+dependencies for the same kind of work (see `pytorch-scientific-ml/notebooks/` - eight
+notebooks and a script, all plain PyTorch, no extra deps). Do **not** group unrelated fields
+into one bundle just because they're each small - `quantum-chemistry/`, `quantum-computing/`,
+`cheminformatics/`, `materials-science/`, and `seismology/` are separate single-package bundles
+on purpose, even though they'd technically all fit in one lightweight pure-Python image:
+someone who wants cheminformatics shouldn't have to build an environment that also drags in a
+seismology library and a quantum circuit simulator they'll never use. When in doubt, default to
+a new minimal bundle rather than adding to an existing one.
