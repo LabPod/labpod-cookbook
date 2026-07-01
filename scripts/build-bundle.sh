@@ -34,7 +34,17 @@ out_dir="dist"
 out_file="$out_dir/${cookbook_id}.labpod-bundle.tar"
 mkdir -p "$out_dir"
 
-tar_args=(-cf "$out_file" -C "$template_dir" bundle.json README.md)
+# Reproducible output: same input bytes -> same tar bytes, every time, on
+# every machine. Without this, tar embeds each file's mtime/owner/group and
+# entries in readdir order, so an unrelated rebuild of unchanged content
+# produces a byte-different tar - which made CI commit a no-op-content diff
+# on every run.
+tar_args=(
+	--sort=name
+	--mtime='UTC 2020-01-01'
+	--owner=0 --group=0 --numeric-owner
+	-cf "$out_file" -C "$template_dir" bundle.json README.md
+)
 if [[ -d "$template_dir/context" ]]; then
 	tar_args+=(context)
 fi
