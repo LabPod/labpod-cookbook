@@ -1,0 +1,37 @@
+{
+  "schema_version": "1",
+  "kind": "labpod.template.bundle",
+  "id_hint": "cookbook-pytorch-gpu-basics",
+  "name": "PyTorch GPU Basics (Cookbook)",
+  "description": "Same environment as the PyTorch JupyterLab template, packaged as a standalone cookbook bundle so it can be imported and built independently of the managed catalog. Pairs with the pytorch-gpu-basics notebook at github.com/LabPod/labpod-cookbook.",
+  "type": "jupyter",
+  "image": {
+    "ref": "quay.io/jupyter/pytorch-notebook:cuda12-python-3.11"
+  },
+  "defaults": {
+    "cpu": 4,
+    "memory_gb": 16,
+    "gpu_required": false,
+    "gpu_default": true,
+    "app_port": 8888,
+    "base_url_arg": "--ServerApp.base_url",
+    "sleep_entrypoint": true
+  },
+  "requires_eula": false,
+  "ports": [
+    {
+      "name": "jupyter",
+      "label": "JupyterLab",
+      "container_port": 8888,
+      "protocol": "http",
+      "base_path_arg": "--ServerApp.base_url",
+      "is_primary": true,
+      "command_template": "jupyter lab --ServerApp.ip=0.0.0.0 --ServerApp.port=${HOST_PORT} --ServerApp.open_browser=False --ServerApp.token=${AUTH_TOKEN} --ServerApp.password= --ServerApp.base_url=${BASE_PATH} --ServerApp.root_dir=/work",
+      "readiness_path": "/lab",
+      "probe_command": "jupyter",
+      "install_hint": "uv pip install --system jupyterlab",
+      "option_schema_json": "{\"fields\":[]}",
+      "proxy_strip_prefix": false
+    }
+  ]
+}

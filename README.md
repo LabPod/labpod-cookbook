@@ -12,6 +12,7 @@ imported separately — see [How to use a cookbook](#how-to-use-a-cookbook) belo
 
 | Domain | Directory | Bundle | Notes |
 |---|---|---|---|
+| PyTorch GPU basics | [`pytorch-gpu-basics/`](pytorch-gpu-basics/) | [`.tar`](dist/pytorch-gpu-basics.labpod-bundle.tar) | Pull-only image, no custom build. Confirm the GPU is visible, CPU-vs-GPU benchmark, tiny training loop. Start here. |
 | _more coming soon_ | | | |
 
 ## How to use a cookbook
