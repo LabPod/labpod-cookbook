@@ -1,0 +1,40 @@
+{
+  "schema_version": "1",
+  "kind": "labpod.template.bundle",
+  "id_hint": "cookbook-huggingface",
+  "name": "Hugging Face Basics (Cookbook)",
+  "description": "PyTorch JupyterLab plus transformers + accelerate (see context/requirements.txt), built from this template's Dockerfile. Unlike the other labpod-cookbook environments, notebooks here download pretrained model weights from the Hugging Face Hub at runtime, so the workspace needs internet access the first time each model is used (weights cache under HF_HOME, which LabPod redirects to /work/.hf-cache, so they persist across stop/start).",
+  "type": "jupyter",
+  "image": {
+    "ref": "localhost/labpod-cookbook/huggingface:latest",
+    "dockerfile": {
+      "path": "Dockerfile"
+    }
+  },
+  "defaults": {
+    "cpu": 4,
+    "memory_gb": 16,
+    "gpu_required": false,
+    "gpu_default": true,
+    "app_port": 8888,
+    "base_url_arg": "--ServerApp.base_url",
+    "sleep_entrypoint": true
+  },
+  "requires_eula": false,
+  "ports": [
+    {
+      "name": "jupyter",
+      "label": "JupyterLab",
+      "container_port": 8888,
+      "protocol": "http",
+      "base_path_arg": "--ServerApp.base_url",
+      "is_primary": true,
+      "command_template": "jupyter lab --ServerApp.ip=0.0.0.0 --ServerApp.port=${HOST_PORT} --ServerApp.open_browser=False --ServerApp.token=${AUTH_TOKEN} --ServerApp.password= --ServerApp.base_url=${BASE_PATH} --ServerApp.root_dir=/work",
+      "readiness_path": "/lab",
+      "probe_command": "jupyter",
+      "install_hint": "uv pip install --system jupyterlab",
+      "option_schema_json": "{\"fields\":[]}",
+      "proxy_strip_prefix": false
+    }
+  ]
+}

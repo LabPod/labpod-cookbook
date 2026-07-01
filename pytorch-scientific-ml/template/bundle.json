@@ -1,9 +1,9 @@
 {
   "schema_version": "1",
   "kind": "labpod.template.bundle",
-  "id_hint": "cookbook-pytorch-gpu-basics",
-  "name": "PyTorch GPU Basics (Cookbook)",
-  "description": "Same environment as the PyTorch JupyterLab template, packaged as a standalone cookbook bundle so it can be imported and built independently of the managed catalog. Pairs with the pytorch-gpu-basics notebook at github.com/LabPod/labpod-cookbook.",
+  "id_hint": "cookbook-pytorch-scientific-ml",
+  "name": "PyTorch Scientific ML (Cookbook)",
+  "description": "Plain PyTorch JupyterLab environment, no extra dependencies. Shared by several labpod-cookbook notebooks (GPU basics, neural operator, PINN, U-Net, diffusion) - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
   "type": "jupyter",
   "image": {
     "ref": "quay.io/jupyter/pytorch-notebook:cuda12-python-3.11"
