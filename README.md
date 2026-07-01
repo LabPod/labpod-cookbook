@@ -4,10 +4,11 @@ Ready-to-run research environments and starter notebooks for [LabPod](https://la
 at junior researchers who want to go from "I have a GPU workstation" to "I'm training something"
 in a few minutes.
 
-Each top-level directory is a **LabPod template bundle** (environment: base image, optionally a
-`Dockerfile` + `requirements.txt`) plus one or more **starter notebooks** (the actual research
-content). The two are imported separately — see [How to use a cookbook](#how-to-use-a-cookbook)
-below.
+Most top-level directories are a **LabPod template bundle** (environment: base image,
+optionally a `Dockerfile` + `requirements.txt`) plus one or more **starter notebooks** (the
+actual research content), imported separately — see
+[How to use a cookbook](#how-to-use-a-cookbook) below. A few instead reuse one of LabPod's
+existing built-in templates and ship only example code - see `parallel-programming/`.
 
 ## Cookbooks
 
@@ -18,12 +19,17 @@ below.
 | same bundle | [pinn](pytorch-scientific-ml/notebooks/pinn.ipynb) | Physics-informed neural network solving a damped harmonic oscillator, scored against the analytic solution. |
 | same bundle | [unet](pytorch-scientific-ml/notebooks/unet.ipynb) | Small U-Net for synthetic circle segmentation, scored with IoU. |
 | same bundle | [diffusion](pytorch-scientific-ml/notebooks/diffusion.ipynb) | Minimal DDPM trained and sampled on a 2D toy ring distribution. |
+| same bundle | [transformer](pytorch-scientific-ml/notebooks/transformer.ipynb) | Multi-head self-attention from scratch on a sequence-reversal task, with a positional-encoding ablation. |
+| same bundle | [gnn](pytorch-scientific-ml/notebooks/gnn.ipynb) | Graph neural network denoising noisy per-node signals via message passing, versus a no-graph MLP baseline. |
+| same bundle | [rl](pytorch-scientific-ml/notebooks/rl.ipynb) | REINFORCE policy-gradient agent on a hand-rolled grid world, converges to the exact optimal path. |
+| same bundle | [ddp_basics](pytorch-scientific-ml/notebooks/ddp_basics.py) | Multi-GPU training with `DistributedDataParallel`. A script, not a notebook - run via `torchrun` from a terminal. |
 | [`huggingface/`](huggingface/) ([`.tar`](dist/huggingface.labpod-bundle.tar)) | [notebook](huggingface/notebook.ipynb) | Sentiment classification + text generation with `transformers` pipelines. Needs internet access at runtime to download model weights (the other bundles don't). |
+| [`parallel-programming/`](parallel-programming/) (no bundle - uses LabPod's built-in **Parallel Programming (CUDA/MPI/OpenMP)** template) | [openmp](parallel-programming/openmp/pi_openmp.c) / [mpi](parallel-programming/mpi/pi_mpi.c) / [cuda](parallel-programming/cuda/vector_add.cu) | The same problem (or the CUDA equivalent) solved with three different parallelism models: shared-memory threads, distributed-memory processes, GPU SIMT. |
 
 All `pytorch-scientific-ml` notebooks use synthetic/toy data generated in the notebook itself -
-no dataset download required, so they work on an offline / air-gapped workspace too. Its four
-training notebooks (everything but `gpu-basics`) log to TensorBoard - the bundle's Dockerfile
-bakes it in, so the TensorBoard app just works after building.
+no dataset download required, so they work on an offline / air-gapped workspace too. Every
+notebook except `ddp_basics.py` logs to TensorBoard - the bundle's Dockerfile bakes it in, so
+the TensorBoard app just works after building.
 
 ## How to use a cookbook
 

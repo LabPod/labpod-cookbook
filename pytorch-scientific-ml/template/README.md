@@ -12,6 +12,13 @@ Shared by several notebooks - build this template once, then run any of them:
 - `notebooks/pinn.ipynb` - a physics-informed neural network.
 - `notebooks/unet.ipynb` - a small U-Net for segmentation.
 - `notebooks/diffusion.ipynb` - a minimal denoising diffusion model.
+- `notebooks/transformer.ipynb` - multi-head self-attention from scratch, with a positional-
+  encoding ablation.
+- `notebooks/gnn.ipynb` - a graph neural network, denoising per-node signals via message
+  passing, versus a no-graph MLP baseline.
+- `notebooks/rl.ipynb` - a policy-gradient (REINFORCE) agent on a hand-rolled grid world.
+- `notebooks/ddp_basics.py` - multi-GPU training with `DistributedDataParallel`. A plain
+  script, not a notebook - see the file's own docstring, it needs `torchrun` from a terminal.
 
 All use synthetic/toy data generated in the notebook - no dataset download required, so these
 work on an offline / air-gapped workspace too.
@@ -27,7 +34,7 @@ Then open any notebook under
 
 ## Watching training in TensorBoard
 
-`neural-operator.ipynb`, `pinn.ipynb`, `unet.ipynb`, and `diffusion.ipynb` all log their
-training curves to `/work/runs/<notebook-name>`. TensorBoard is already installed (baked in by
-this template's Dockerfile) - just open the **TensorBoard** app from LabPod's Apps page
-(default log directory `/work/runs` shows every notebook's runs at once).
+All notebooks except `ddp_basics.py` log their training curves to `/work/runs/<notebook-name>`.
+TensorBoard is already installed (baked in by this template's Dockerfile) - just open the
+**TensorBoard** app from LabPod's Apps page (default log directory `/work/runs` shows every
+notebook's runs at once).
