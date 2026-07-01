@@ -1,3 +1,6 @@
 pyscf>=2.5
 qiskit>=1.0
 qiskit-aer>=0.14
+rdkit>=2024.3
+ase>=3.23
+obspy>=1.4
