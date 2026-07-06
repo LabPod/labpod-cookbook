@@ -5,9 +5,8 @@
 # never bundled - see this repo's README for why.
 #
 # LabPod's bundle decoder expects a plain, uncompressed POSIX tar containing
-# bundle.json, README.md, and an optional context/ directory - see
-# docs/02-tech-spec.md §2.24 in the labpod repo for the authoritative format
-# (size/entry-count caps, context/ extension whitelist, path-safety rules).
+# bundle.json, README.md, and an optional context/ directory. Keep bundles small
+# and keep context/ limited to ordinary build-context files.
 #
 # Usage: scripts/build-bundle.sh <cookbook-dir>
 set -euo pipefail

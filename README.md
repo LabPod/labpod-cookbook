@@ -38,8 +38,10 @@ existing built-in templates and ship only example code - see `parallel-programmi
 
 All `pytorch-scientific-ml` notebooks use synthetic/toy data generated in the notebook itself -
 no dataset download required, so they work on an offline / air-gapped workspace too. Every
-notebook except `ddp_basics.py` logs to TensorBoard - the bundle's Dockerfile bakes it in, so
-the TensorBoard app just works after building.
+notebook except `ddp_basics.py` logs to TensorBoard, and the `transformer`, `gnn`, and `unet`
+examples also log MLflow runs to `/work/mlruns` for comparing parameters, metrics, models, and
+artifacts. The bundle's Dockerfile bakes both tools in, so the TensorBoard and MLflow apps just
+work after building.
 
 ## How to use a cookbook
 

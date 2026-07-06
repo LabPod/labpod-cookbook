@@ -3,7 +3,7 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-pytorch-scientific-ml",
   "name": "PyTorch Scientific ML (Cookbook)",
-  "description": "PyTorch JupyterLab plus tensorboard (see context/requirements.txt), built from this template's Dockerfile. Shared by several labpod-cookbook notebooks (GPU basics, neural operator, PINN, U-Net, diffusion), all of which log training curves for the TensorBoard launcher - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
+  "description": "PyTorch JupyterLab plus tensorboard and mlflow (see context/requirements.txt), built from this template's Dockerfile. Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/pytorch-scientific-ml:latest",
@@ -48,6 +48,20 @@
       "probe_command": "tensorboard",
       "install_hint": "already installed by this template's Dockerfile",
       "option_schema_json": "{\"fields\":[{\"name\":\"LOGDIR\",\"type\":\"directory\",\"label\":\"Log directory\",\"default\":\"/work/runs\",\"help\":\"Every notebook in this cookbook logs to /work/runs/<name> - pick the parent runs/ folder to see all of them, or a specific subfolder for just one.\"}]}",
+      "proxy_strip_prefix": false
+    },
+    {
+      "name": "mlflow",
+      "label": "MLflow",
+      "container_port": 5000,
+      "protocol": "http",
+      "base_path_arg": "--static-prefix",
+      "is_primary": false,
+      "command_template": "mlflow ui --host=0.0.0.0 --port=${HOST_PORT} --backend-store-uri=file:///work/mlruns --static-prefix=${BASE_PATH}",
+      "readiness_path": "/",
+      "probe_command": "mlflow",
+      "install_hint": "already installed by this template's Dockerfile",
+      "option_schema_json": "{\"fields\":[]}",
       "proxy_strip_prefix": false
     }
   ]

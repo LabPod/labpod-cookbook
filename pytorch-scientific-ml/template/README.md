@@ -1,7 +1,8 @@
 # PyTorch Scientific ML (Cookbook)
 
 Builds from `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11` (same base image as LabPod's
-built-in "PyTorch JupyterLab" template) plus `tensorboard` - see `context/requirements.txt`.
+built-in "PyTorch JupyterLab" template) plus `tensorboard` and `mlflow` - see
+`context/requirements.txt`.
 This has a real build step: import with **Build now** checked, or import with **Build later** and
 click **Build** before enabling the template.
 
@@ -39,3 +40,10 @@ All notebooks except `ddp_basics.py` log their training curves to `/work/runs/<n
 TensorBoard is already installed (baked in by this template's Dockerfile) - just open the
 **TensorBoard** app from LabPod's Apps page (default log directory `/work/runs` shows every
 notebook's runs at once).
+
+## Comparing runs in MLflow
+
+`transformer.ipynb`, `gnn.ipynb`, and `unet.ipynb` also log experiment runs to
+`/work/mlruns`. Open the **MLflow** app from LabPod's Apps page to compare parameters, final
+metrics, and saved model/artifact outputs while still using TensorBoard for live training
+curves.
