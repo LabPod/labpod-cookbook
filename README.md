@@ -43,16 +43,17 @@ the TensorBoard app just works after building.
 
 ## How to use a cookbook
 
-1. **Import the environment.** Download the bundle's `dist/<bundle>.labpod-bundle.tar` - either
-   from this repo directly, or from its raw URL:
+1. **Import the environment.** Use the bundle's raw URL:
    `https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/<bundle>.labpod-bundle.tar`
-   (that URL also works with LabPod's "import from URL" option, once that ships). Then import it
-   in LabPod: **Images → My templates → Import**. This creates a private, disabled template.
-2. **Build it.** Select the imported template and click **Build**. This builds the environment
-   once (a no-op download-and-tag for a pull-only bundle, a real image build if it has a
-   `Dockerfile`); the image is reused by every workspace and every notebook that uses this
-   bundle afterward.
-3. **Enable it**, then create a workspace from the template as usual.
+   in LabPod's **My templates → Import → bundle URL** field, or download the `.tar` and use the
+   file picker. This creates a private, disabled template for review.
+2. **Prepare the image.**
+   - Dockerfile bundles: leave **Build now** checked when importing, or import with **Build later**
+     and click **Build** from My templates afterward. The build creates a private
+     `localhost/labpod-import/...` image reused by every workspace made from that template.
+   - Pull-only bundles (`gromacs-md`, `openfoam-cfd`): there is no Dockerfile to build. Pull the
+     image ref shown in the template from **Images** first, then enable the template.
+3. **Enable it**, then create a workspace from the template.
 4. **Get the notebook(s).** Open the LabPod Terminal (or a Jupyter terminal) inside the
    workspace and clone this repo into `/work`, which persists across stop/start:
    ```bash
@@ -64,10 +65,10 @@ the TensorBoard app just works after building.
 
 Notebooks are not part of the template import — LabPod's bundle format only allows a small
 whitelist of build-context file types (`.py`, `.txt`, `.yaml`, etc., no `.ipynb`), by design:
-bundles describe the *environment*, not your working files. Environments should be built once
-and reused; notebooks and data belong in `/work`, which is what actually survives a workspace
-stop/start. The directory layout below keeps that split explicit: everything under `template/`
-is what gets bundled, notebooks sit outside it.
+bundles describe the *environment*, not your working files. Environments should be built or
+pulled once and reused; notebooks and project data belong in `/work`, which persists across
+workspace stop/start. The directory layout below keeps that split explicit: everything under
+`template/` is what gets bundled, notebooks sit outside it.
 
 ## Building a bundle yourself
 

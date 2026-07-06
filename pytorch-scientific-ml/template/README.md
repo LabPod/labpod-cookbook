@@ -2,7 +2,8 @@
 
 Builds from `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11` (same base image as LabPod's
 built-in "PyTorch JupyterLab" template) plus `tensorboard` - see `context/requirements.txt`.
-This has a real build step: after importing, click **Build** before creating a workspace.
+This has a real build step: import with **Build now** checked, or import with **Build later** and
+click **Build** before enabling the template.
 
 Shared by several notebooks - build this template once, then run any of them:
 

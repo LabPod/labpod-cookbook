@@ -11,8 +11,9 @@ no way around this; if your lab doesn't have such a license, this cookbook isn't
 LabPod's own built-in MATLAB template.
 
 Build steps:
-1. Import this bundle, then click **Build** (real image build - pulls the MathWorks base image
-   and installs matlab-proxy).
+1. Import this bundle with **Build now** checked, or import with **Build later** and click
+   **Build** from My templates. This is a real image build: it pulls the MathWorks base image and
+   installs matlab-proxy.
 2. Enable the template, create a workspace, configure your license (see MathWorks' own
    matlab-proxy / container licensing docs for exact steps - out of scope here).
 3. Open the **MATLAB** app from LabPod's Apps page.

@@ -1,8 +1,10 @@
 # GROMACS Molecular Dynamics (Cookbook)
 
-Pulls the official `gromacs/gromacs` image (CUDA-enabled build - works fine without a GPU too,
-just slower), no custom build. Terminal-only, like `openfoam-cfd/` - you run `gmx` commands
-directly through LabPod's Terminal, there's no web app here.
+Uses the official `gromacs/gromacs` image (CUDA-enabled build - works fine without a GPU too,
+just slower), no custom Dockerfile. After importing this bundle, pull
+`docker.io/gromacs/gromacs:gmx-2022.2-cuda-11.6.0-avx` from LabPod's Images page, then enable
+the template. Terminal-only, like `openfoam-cfd/` - you run `gmx` commands directly through
+LabPod's Terminal, there's no web app here.
 
 Unlike every other cookbook in this repo, **this one doesn't include a self-contained
 tutorial**. GROMACS' official Docker image has no bundled "hello world" case the way OpenFOAM
@@ -25,8 +27,8 @@ didn't seem worth it when a much better resource already exists.
    thoroughly tested than anything written from scratch for this cookbook could be. It walks
    through the full pipeline: `pdb2gmx`, solvation, ion addition, energy minimization, NVT/NPT
    equilibration, and a production run.
-3. Save your working files under `/work` (persistent across stop/start), not your home
-   directory outside it.
+3. Save project files under `/work` so they are easy to find and reuse. LabPod also persists the
+   workspace home directory, but `/work` is the intended project area.
 
 ## Next steps
 

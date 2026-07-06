@@ -2,7 +2,8 @@
 
 Builds from `quay.io/jupyter/scipy-notebook:python-3.11` plus `samtools` and `bwa` (installed
 via `apt-get` - both are stable, long-standing Ubuntu packages) - see `context/Dockerfile`.
-This has a real build step: after importing, click **Build** before creating a workspace.
+This has a real build step: import with **Build now** checked, or import with **Build later** and
+click **Build** before enabling the template.
 
 `notebooks/alignment-basics.ipynb` generates a small synthetic reference genome and simulated
 reads in Python (no download needed), then shells out to `bwa` and `samtools` - the two most
