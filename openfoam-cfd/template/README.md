@@ -15,7 +15,7 @@ git clone https://github.com/LabPod/labpod-cookbook /work/labpod-cookbook
 cat /work/labpod-cookbook/openfoam-cfd/WALKTHROUGH.md
 ```
 
-**Note on verification**: unlike every other cookbook in this repo, the walkthrough below was
+**Note on verification**: unlike every other cookbook in this repo, `../WALKTHROUGH.md` was
 **not run against a real OpenFOAM installation** while writing it (no OpenFOAM available in
 that environment) - it follows OpenFOAM's own official tutorial workflow closely, but verify
 each step yourself the first time through.

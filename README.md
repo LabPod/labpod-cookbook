@@ -51,8 +51,9 @@ work after building.
    file picker. This creates a private, disabled template for review.
 2. **Prepare the image.**
    - Dockerfile bundles: leave **Build now** checked when importing, or import with **Build later**
-     and click **Build** from My templates afterward. The build creates a private
-     `localhost/labpod-import/...` image reused by every workspace made from that template.
+     and click **Build** from My templates afterward. The build creates the private image ref
+     declared in the bundle, usually `localhost/labpod-cookbook/<bundle>:latest`, reused by every
+     workspace made from that template.
    - Pull-only bundles (`gromacs-md`, `openfoam-cfd`): there is no Dockerfile to build. Pull the
      image ref shown in the template from **Images** first, then enable the template.
 3. **Enable it**, then create a workspace from the template.
@@ -92,8 +93,9 @@ Each top-level directory separates its bundle from its notebook(s):
 ```
 
 `scripts/build-bundle.sh <bundle-dir>` packs `<bundle-dir>/template/`'s `bundle.json`,
-`README.md`, and `context/` into `dist/<bundle-dir>.labpod-bundle.tar` (a plain, uncompressed
-POSIX tar - LabPod's bundle decoder does not accept gzip).
+`README.md`, and `context/` into the repo's `dist/<bundle-dir>.labpod-bundle.tar` (a plain,
+uncompressed POSIX tar - LabPod's bundle decoder does not accept gzip). The script uses GNU tar
+for reproducible archives, so on macOS install `gtar` or build from Linux.
 
 Built tars are committed to this repo under `dist/` rather than published only as release
 assets - LabPod's own format caps a bundle tar at 1 MiB, so this is cheap, and it means every

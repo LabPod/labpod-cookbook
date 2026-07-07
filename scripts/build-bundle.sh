@@ -16,9 +16,11 @@ if [[ $# -ne 1 ]]; then
 	exit 1
 fi
 
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cookbook_dir="${1%/}"
-cookbook_id="$(basename "$cookbook_dir")"
-template_dir="$cookbook_dir/template"
+cookbook_path="$(cd "$cookbook_dir" && pwd)"
+cookbook_id="$(basename "$cookbook_path")"
+template_dir="$cookbook_path/template"
 
 if [[ ! -f "$template_dir/bundle.json" ]]; then
 	echo "error: $template_dir/bundle.json not found" >&2
@@ -29,7 +31,7 @@ if [[ ! -f "$template_dir/README.md" ]]; then
 	exit 1
 fi
 
-out_dir="dist"
+out_dir="$repo_root/dist"
 out_file="$out_dir/${cookbook_id}.labpod-bundle.tar"
 mkdir -p "$out_dir"
 

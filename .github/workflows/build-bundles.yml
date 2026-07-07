@@ -7,6 +7,11 @@ on:
       - "*/template/**"
       - "scripts/build-bundle.sh"
       - ".github/workflows/build-bundles.yml"
+  pull_request:
+    paths:
+      - "*/template/**"
+      - "scripts/build-bundle.sh"
+      - ".github/workflows/build-bundles.yml"
   workflow_dispatch: {}
 
 # The push this workflow makes only touches dist/, which isn't in the
@@ -34,18 +39,43 @@ jobs:
         run: |
           set -euo pipefail
           max_bytes=$((1024 * 1024))
-          for tar in dist/*.labpod-bundle.tar; do
-            [[ -e "$tar" ]] || continue
+
+          shopt -s nullglob
+          bundle_jsons=(*/template/bundle.json)
+          tars=(dist/*.labpod-bundle.tar)
+
+          if (( ${#bundle_jsons[@]} == 0 )); then
+            echo "error: no template/bundle.json files found" >&2
+            exit 1
+          fi
+          if (( ${#tars[@]} == 0 )); then
+            echo "error: no bundle tars found in dist/" >&2
+            exit 1
+          fi
+          if (( ${#tars[@]} != ${#bundle_jsons[@]} )); then
+            echo "error: found ${#tars[@]} bundle tars for ${#bundle_jsons[@]} cookbooks" >&2
+            exit 1
+          fi
+
+          for bundle_json in "${bundle_jsons[@]}"; do
+            cookbook="${bundle_json%%/template/bundle.json}"
+            tar="dist/${cookbook}.labpod-bundle.tar"
+            if [[ ! -f "$tar" ]]; then
+              echo "error: missing $tar for $bundle_json" >&2
+              exit 1
+            fi
             size=$(stat -c%s "$tar")
             if (( size > max_bytes )); then
               echo "error: $tar is $size bytes, over LabPod's 1 MiB bundle cap" >&2
               exit 1
             fi
-            tar -tf "$tar" | grep -qx 'bundle.json' || { echo "error: $tar missing bundle.json" >&2; exit 1; }
-            tar -tf "$tar" | grep -qx 'README.md' || { echo "error: $tar missing README.md" >&2; exit 1; }
+            entries="$(tar -tf "$tar")"
+            grep -qx 'bundle.json' <<<"$entries" || { echo "error: $tar missing bundle.json" >&2; exit 1; }
+            grep -qx 'README.md' <<<"$entries" || { echo "error: $tar missing README.md" >&2; exit 1; }
           done
 
       - name: Commit updated tars
+        if: github.event_name == 'push'
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
