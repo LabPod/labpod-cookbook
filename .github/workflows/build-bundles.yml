@@ -4,11 +4,13 @@ on:
   push:
     branches: [main]
     paths:
+      - "**/*.ipynb"
       - "*/template/**"
       - "scripts/build-bundle.sh"
       - ".github/workflows/build-bundles.yml"
   pull_request:
     paths:
+      - "**/*.ipynb"
       - "*/template/**"
       - "scripts/build-bundle.sh"
       - ".github/workflows/build-bundles.yml"
@@ -23,6 +25,26 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate notebook cell IDs
+        run: |
+          set -euo pipefail
+          mapfile -d '' notebooks < <(find . -path './.git' -prune -o -name '*.ipynb' -print0)
+          if (( ${#notebooks[@]} == 0 )); then
+            echo "error: no notebooks found" >&2
+            exit 1
+          fi
+          for notebook in "${notebooks[@]}"; do
+            if ! jq -e '
+              (.nbformat == 4) and
+              (.nbformat_minor >= 5) and
+              (all(.cells[]; ((.id? // "") | test("^[A-Za-z0-9_-]{1,64}$")))) and
+              ([.cells[].id] | length == (unique | length))
+            ' "$notebook" >/dev/null; then
+              echo "error: $notebook has a missing, invalid, or duplicate cell ID" >&2
+              exit 1
+            fi
+          done
 
       - name: Build every cookbook's bundle tar
         run: |
