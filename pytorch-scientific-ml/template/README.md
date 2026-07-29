@@ -1,9 +1,9 @@
 # PyTorch Scientific ML (Cookbook)
 
 Builds from LabPod's `ghcr.io/labpod/pytorch-jupyter:cu126` composite image (the default base
-for LabPod's built-in "PyTorch JupyterLab" template) plus `tensorboard` and `mlflow` - see
-`context/requirements.txt`. The base provides Python 3.12, PyTorch, JupyterLab, TensorBoard,
-and code-server without baking a container user.
+for LabPod's built-in "PyTorch JupyterLab" template), which already provides Python 3.12,
+PyTorch, JupyterLab, TensorBoard, and code-server without baking a container user. This
+cookbook's derived layer adds MLflow - see `context/requirements.txt`.
 This has a real build step: import with **Build now** checked, or import with **Build later** and
 click **Build** before enabling the template.
 
@@ -42,9 +42,9 @@ Then open any notebook under
 ## Watching training in TensorBoard
 
 All notebooks except `ddp_basics.py` log their training curves to `/work/runs/<notebook-name>`.
-TensorBoard is already installed (baked in by this template's Dockerfile) - just open the
-**TensorBoard** app from LabPod's Apps page (default log directory `/work/runs` shows every
-notebook's runs at once).
+TensorBoard is inherited from the LabPod PyTorch base image - just open the **TensorBoard** app
+from LabPod's Apps page (default log directory `/work/runs` shows every notebook's runs at
+once).
 
 ## Comparing runs in MLflow
 

@@ -3,7 +3,7 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-pytorch-scientific-ml",
   "name": "PyTorch Scientific ML (Cookbook)",
-  "description": "PyTorch JupyterLab on the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:cu126) plus tensorboard and mlflow (see context/requirements.txt), built from this template's Dockerfile. Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
+  "description": "PyTorch JupyterLab with TensorBoard inherited from the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:cu126), plus MLflow added by this template's Dockerfile (see context/requirements.txt). Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/pytorch-scientific-ml:latest",
@@ -46,7 +46,7 @@
       "command_template": "tensorboard --host=0.0.0.0 --port=${HOST_PORT} --path_prefix=${BASE_PATH} --logdir=${LOGDIR}",
       "readiness_path": "/",
       "probe_command": "tensorboard",
-      "install_hint": "already installed by this template's Dockerfile",
+      "install_hint": "included in the LabPod PyTorch base image",
       "option_schema_json": "{\"fields\":[{\"name\":\"LOGDIR\",\"type\":\"directory\",\"label\":\"Log directory\",\"default\":\"/work/runs\",\"help\":\"Every notebook in this cookbook logs to /work/runs/<name> - pick the parent runs/ folder to see all of them, or a specific subfolder for just one.\"}]}",
       "proxy_strip_prefix": false
     },
