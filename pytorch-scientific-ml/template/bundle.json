@@ -3,7 +3,7 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-pytorch-scientific-ml",
   "name": "PyTorch Scientific ML (Cookbook)",
-  "description": "PyTorch JupyterLab plus tensorboard and mlflow (see context/requirements.txt), built from this template's Dockerfile. Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
+  "description": "PyTorch JupyterLab on the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:cu126) plus tensorboard and mlflow (see context/requirements.txt), built from this template's Dockerfile. Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/pytorch-scientific-ml:latest",

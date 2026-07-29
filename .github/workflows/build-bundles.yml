@@ -72,6 +72,12 @@ jobs:
             entries="$(tar -tf "$tar")"
             grep -qx 'bundle.json' <<<"$entries" || { echo "error: $tar missing bundle.json" >&2; exit 1; }
             grep -qx 'README.md' <<<"$entries" || { echo "error: $tar missing README.md" >&2; exit 1; }
+
+            contents="$(tar -xOf "$tar")"
+            if grep -Eq '((quay\.io|docker\.io)/)?jupyter/[[:alnum:]_.-]+-notebook' <<<"$contents"; then
+              echo "error: $tar still references an official Jupyter Docker Stacks image" >&2
+              exit 1
+            fi
           done
 
       - name: Commit updated tars

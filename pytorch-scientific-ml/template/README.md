@@ -1,10 +1,15 @@
 # PyTorch Scientific ML (Cookbook)
 
-Builds from `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11` (same base image as LabPod's
-built-in "PyTorch JupyterLab" template) plus `tensorboard` and `mlflow` - see
-`context/requirements.txt`.
+Builds from LabPod's `ghcr.io/labpod/pytorch-jupyter:cu126` composite image (the default base
+for LabPod's built-in "PyTorch JupyterLab" template) plus `tensorboard` and `mlflow` - see
+`context/requirements.txt`. The base provides Python 3.12, PyTorch, JupyterLab, TensorBoard,
+and code-server without baking a container user.
 This has a real build step: import with **Build now** checked, or import with **Build later** and
 click **Build** before enabling the template.
+
+The committed bundle targets LabPod's default `cu126` line. To build for an older CUDA host,
+change `LABPOD_BASE_IMAGE` in `context/Dockerfile` to the published `cu121` tag before packing
+the bundle; use `cu129` on a sufficiently new driver and a Volta-or-newer GPU.
 
 Shared by several notebooks - build this template once, then run any of them:
 

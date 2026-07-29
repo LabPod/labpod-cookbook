@@ -1,8 +1,10 @@
 # Materials Science (Cookbook)
 
-Builds from `quay.io/jupyter/scipy-notebook:python-3.11` plus `ase` - see
-`context/requirements.txt`. This has a real build step: import with **Build now** checked, or
-import with **Build later** and click **Build** before enabling the template. No GPU needed.
+Builds from LabPod's CPU-only `ghcr.io/labpod/scipy-jupyter:py312` composite image plus `ase`
+- see `context/requirements.txt`. The base provides Python 3.12, JupyterLab, and the common
+scientific Python stack without baking a container user. This has a real build step: import
+with **Build now** checked, or import with **Build later** and click **Build** before enabling
+the template. No GPU needed.
 
 `notebook.ipynb` scans and relaxes the lattice constant of bulk copper using ASE's built-in EMT
 potential - no data download or external DFT code required.

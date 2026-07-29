@@ -1,7 +1,9 @@
 # Bioinformatics: Read Alignment (Cookbook)
 
-Builds from `quay.io/jupyter/scipy-notebook:python-3.11` plus `samtools` and `bwa` (installed
-via `apt-get` - both are stable, long-standing Ubuntu packages) - see `context/Dockerfile`.
+Builds from LabPod's CPU-only `ghcr.io/labpod/scipy-jupyter:py312` composite image plus
+`samtools` and `bwa` (installed via `apt-get` - both are stable, long-standing Ubuntu
+packages) - see `context/Dockerfile`. The base provides Python 3.12, JupyterLab, and the
+common scientific Python stack without baking a container user.
 This has a real build step: import with **Build now** checked, or import with **Build later** and
 click **Build** before enabling the template.
 

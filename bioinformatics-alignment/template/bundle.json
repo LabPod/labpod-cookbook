@@ -3,7 +3,7 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-bioinformatics-alignment",
   "name": "Bioinformatics: Read Alignment (Cookbook)",
-  "description": "CPU-only JupyterLab (quay.io/jupyter/scipy-notebook base) plus samtools and bwa, built from this template's Dockerfile. Covers the most common shared-workstation genomics workload: aligning sequencing reads to a reference with BWA, then sorting/indexing/inspecting the result with samtools. See github.com/LabPod/labpod-cookbook/tree/main/bioinformatics-alignment.",
+  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:py312) plus samtools and bwa, built from this template's Dockerfile. Covers the most common shared-workstation genomics workload: aligning sequencing reads to a reference with BWA, then sorting/indexing/inspecting the result with samtools. See github.com/LabPod/labpod-cookbook/tree/main/bioinformatics-alignment.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/bioinformatics-alignment:latest",
