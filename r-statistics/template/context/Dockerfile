@@ -14,6 +14,16 @@ FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# rocker bakes uid 1000 as `rstudio`. LabPod runs the container as the workspace
+# owner and passes a --passwd-entry naming that owner, but Podman keeps the
+# image's existing line when the uid is taken. An owner on uid 1000 then gets
+# the baked account's identity: RStudio resolves the session home through
+# getpwuid(), lands on /home/rstudio inside the throwaway container layer
+# instead of the persistent home LabPod mounts, and every R package, preference
+# and saved file is discarded on Stop with no error. Free the uid so LabPod's
+# entry always wins.
+RUN userdel rstudio 2>/dev/null || true; rm -rf /home/rstudio
+
 # libzmq5 is a runtime dependency of pbdZMQ (IRkernel's ZMQ transport):
 # the P3M binary package links against it but does not carry it.
 RUN apt-get update \

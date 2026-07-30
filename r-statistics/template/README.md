@@ -70,7 +70,10 @@ security flags (`--cap-drop=ALL`, `--security-opt no-new-privileges`,
 - `reticulate` resolves the bundled venv (checked at build time);
 - rootless `rserver` starts, `--auth-none` issues the session cookie,
   `rsession` spawns as the workspace owner, and RStudio's session state is
-  written to the owner's home;
+  written to the owner's **persistent** home — including on a host where the
+  owner's Linux account is uid 1000, which the rocker base otherwise bakes as
+  `rstudio` (that clash sends the R library and preferences into the throwaway
+  container layer, so the image frees the uid);
 - JupyterLab serves with both the `ir` and `python3` kernels registered.
 
 RStudio serves at the server root and only *generates* URLs under
