@@ -1,0 +1,40 @@
+# Regression, mixed models, GAM, survival
+lme4
+lmerTest
+nlme
+mgcv
+survival
+survminer
+glmnet
+car
+sandwich
+lmtest
+emmeans
+marginaleffects
+broom
+broom.mixed
+performance
+
+# Machine learning
+tidymodels
+ranger
+xgboost
+
+# Time series
+forecast
+fable
+tsibble
+feasts
+
+# Multivariate, latent variable, missing data
+lavaan
+psych
+mice
+
+# Data handling and R/Python interop
+data.table
+arrow
+reticulate
+
+# Jupyter R kernel
+IRkernel

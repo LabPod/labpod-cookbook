@@ -1,0 +1,12 @@
+jupyterlab
+ipywidgets
+jupyter-resource-usage
+numpy
+pandas
+scipy
+statsmodels
+scikit-learn
+matplotlib
+seaborn
+pyarrow
+polars
