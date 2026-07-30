@@ -7,6 +7,17 @@
 # access boundary.
 set -euo pipefail
 
+# With --auth-none, rserver takes the session user from $USER. LabPod exports
+# the workspace owner's host account name and passes a matching --passwd-entry,
+# but Podman only applies that entry when the owner's uid is free inside the
+# image — rocker bakes uid 1000 as `rstudio`, so an owner on uid 1000 (often
+# the first account on a fresh host) leaves $USER naming an account the
+# container cannot resolve. rserver then never launches a session and the
+# browser hangs on a blank workbench with no error. Use the name the container
+# resolves for this uid.
+USER="$(id -un)"
+export USER
+
 runtime_dir="${XDG_RUNTIME_DIR:-/tmp}/labpod-rstudio-$(id -u)"
 mkdir -p "$runtime_dir/run" "$runtime_dir/db"
 chmod 700 "$runtime_dir"
