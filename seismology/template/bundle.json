@@ -9,6 +9,10 @@
     "ref": "localhost/labpod-cookbook/seismology:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-seismology:v1-cpu",
+      "definition_digest": "sha256:f51ed46792eafbc2c409516bffbecba775ea9f6543cb26563c09e3baaf96c374"
     }
   },
   "defaults": {

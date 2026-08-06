@@ -9,6 +9,10 @@
     "ref": "localhost/labpod-cookbook/materials-science:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-materials-science:v1-cpu",
+      "definition_digest": "sha256:0a7b7d5e8d86166d4b23819ba90d8db0c0d041a1d72abcb333c2e8c5b97c6c93"
     }
   },
   "defaults": {

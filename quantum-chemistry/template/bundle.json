@@ -9,6 +9,10 @@
     "ref": "localhost/labpod-cookbook/quantum-chemistry:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-quantum-chemistry:v1-cpu",
+      "definition_digest": "sha256:81d658c49303a3b5dfe3e5e9801ac49ecb1c580cc5299a92f122631fd2279a80"
     }
   },
   "defaults": {

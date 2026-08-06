@@ -8,6 +8,10 @@ two without a second environment.
 CPU-only. Classical statistics — mixed models, GAMs, survival, MCMC — is
 CPU/RAM bound, so this template defaults to no GPU.
 
+The bundle prepares the unchanged definition by pulling the immutable prebuilt image; its
+**approximate pull size is 2.8 GB**. The complete Dockerfile and package lists remain available
+for review, customization, air-gapped fallback, and a local build when the definition changes.
+
 ## Installed
 
 **R 4.5 (rocker/tidyverse base: tidyverse, RStudio Server, Quarto)**
@@ -41,7 +45,7 @@ from R and `import pandas` in the Python kernel are the same install.
 
 ## Usage
 
-Import the bundle, build the image, enable the template, then create a
+Import the bundle, let LabPod pull the published image, enable the template, then create a
 workspace. Work under `/work` — it persists across workspace stop/start,
 and your R session state lands in the workspace's persistent home.
 

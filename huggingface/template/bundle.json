@@ -9,6 +9,20 @@
     "ref": "localhost/labpod-cookbook/huggingface:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu126",
+      "definition_digest": "sha256:74cf4aafa7bb36d65a6efdc0536fcbf9fa143c3905272ed5237af0bb501d30da",
+      "variants": [
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu121",
+          "definition_digest": "sha256:7840bf2bb2bb046e9e03bb9fd9775c2af2b4ea23b36d4c8073fcdd6f72f9f6d9"
+        },
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu129",
+          "definition_digest": "sha256:2b5f593049f2e9062556d3fb89e83253a329eabca79dac71bb6542bdc458f488"
+        }
+      ]
     }
   },
   "defaults": {

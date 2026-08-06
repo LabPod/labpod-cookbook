@@ -9,6 +9,10 @@
     "ref": "localhost/labpod-cookbook/cheminformatics:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-cheminformatics:v1-cpu",
+      "definition_digest": "sha256:602c10023334b9bb2993c99a0160f09bf1f41576ad95d8529fdd345e3beff51c"
     }
   },
   "defaults": {

@@ -9,6 +9,20 @@
     "ref": "localhost/labpod-cookbook/pytorch-scientific-ml:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu126",
+      "definition_digest": "sha256:3fa8a8f56d6f20c32a449f7722ce68aa59df70cfbac63a4b0c0261919dc890ce",
+      "variants": [
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu121",
+          "definition_digest": "sha256:41f63b04435c8c325dab4315a43f3d050df9febb24fbab3a8a933a3855b1cd1f"
+        },
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu129",
+          "definition_digest": "sha256:708e2b18bad01206bdb786be84c32daec2a31a0b3a4e5953abb99b63de35a8f6"
+        }
+      ]
     }
   },
   "defaults": {

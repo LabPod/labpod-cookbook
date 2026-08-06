@@ -9,6 +9,10 @@
     "ref": "localhost/labpod-cookbook/quantum-computing:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-quantum-computing:v1-cpu",
+      "definition_digest": "sha256:4b6765525cb719a387df801f14af74aa030deba1450f36cb798bab8a19977759"
     }
   },
   "defaults": {

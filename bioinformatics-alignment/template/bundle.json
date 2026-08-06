@@ -9,6 +9,10 @@
     "ref": "localhost/labpod-cookbook/bioinformatics-alignment:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-bioinformatics-alignment:v1-cpu",
+      "definition_digest": "sha256:6f51ec749fc8a3fc97936f68b3341bf442cc0866b33726a5e0996cd60078dcf3"
     }
   },
   "defaults": {

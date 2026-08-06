@@ -3,13 +3,14 @@
 Builds from LabPod's `ghcr.io/labpod/pytorch-jupyter:cu126` composite image (the default base
 for LabPod's built-in "PyTorch JupyterLab" template), which already provides Python 3.12,
 PyTorch, JupyterLab, TensorBoard, and code-server without baking a container user. This
-cookbook's derived layer adds MLflow - see `context/requirements.txt`.
-This has a real build step: import with **Build now** checked, or import with **Build later** and
-click **Build** before enabling the template.
+cookbook's derived layer adds MLflow - see `context/requirements.txt`. The bundle prepares the
+unchanged definition by pulling an immutable prebuilt image. **Approximate pull size: 5.0 GB**
+for cu121, 5.7 GB for cu126, and 7.7 GB for cu129. The Dockerfile remains available for review,
+customization, air-gapped fallback, and a local build when the definition is changed.
 
-The committed bundle targets LabPod's default `cu126` line. To build for an older CUDA host,
-change `LABPOD_BASE_IMAGE` in `context/Dockerfile` to the published `cu121` tag before packing
-the bundle; use `cu129` on a sufficiently new driver and a Volta-or-newer GPU.
+The committed bundle defaults to `cu126`; LabPod may select the declared `cu121` or `cu129`
+published variant against the host driver. A custom local build can make the same selection by
+changing `LABPOD_BASE_IMAGE` in `context/Dockerfile`.
 
 Shared by several notebooks - build this template once, then run any of them:
 
@@ -30,7 +31,7 @@ Shared by several notebooks - build this template once, then run any of them:
 All use synthetic/toy data generated in the notebook - no dataset download required, so these
 work on an offline / air-gapped workspace too.
 
-After building and starting a workspace from this template, get the notebooks:
+After starting a workspace from this template, get the notebooks:
 
 ```bash
 git clone https://github.com/LabPod/labpod-cookbook /work/labpod-cookbook
