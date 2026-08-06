@@ -91,10 +91,15 @@ class PublishingWorkflowTest(unittest.TestCase):
                     (ROOT / variant["cookbook"] / "template/bundle.json").read_text()
                 )
                 declared = {
-                    item["ref"]: item["definition_digest"]
+                    item["ref"]: item
                     for item in bundle["image"]["published"]["variants"]
                 }
-                self.assertEqual(declared[variant["ref"]], variant["definition_digest"])
+                declared_variant = declared[variant["ref"]]
+                self.assertEqual(
+                    declared_variant["definition_digest"], variant["definition_digest"]
+                )
+                name, value = variant["build_args"].split("=", 1)
+                self.assertEqual(declared_variant["build_args"], {name: value})
 
     def test_workflow_builds_prs_but_only_pushes_trusted_main(self):
         self.assertIn("pull_request:", self.workflow)

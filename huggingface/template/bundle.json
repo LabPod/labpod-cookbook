@@ -16,11 +16,17 @@
       "variants": [
         {
           "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu121",
-          "definition_digest": "sha256:7840bf2bb2bb046e9e03bb9fd9775c2af2b4ea23b36d4c8073fcdd6f72f9f6d9"
+          "definition_digest": "sha256:7840bf2bb2bb046e9e03bb9fd9775c2af2b4ea23b36d4c8073fcdd6f72f9f6d9",
+          "build_args": {
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:cu121"
+          }
         },
         {
           "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu129",
-          "definition_digest": "sha256:2b5f593049f2e9062556d3fb89e83253a329eabca79dac71bb6542bdc458f488"
+          "definition_digest": "sha256:2b5f593049f2e9062556d3fb89e83253a329eabca79dac71bb6542bdc458f488",
+          "build_args": {
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:cu129"
+          }
         }
       ]
     }
