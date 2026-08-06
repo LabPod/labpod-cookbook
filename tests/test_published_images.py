@@ -102,6 +102,11 @@ class PublishingWorkflowTest(unittest.TestCase):
         self.assertIn("github.ref == 'refs/heads/main'", self.workflow)
         self.assertIn("push: ${{ github.ref == 'refs/heads/main'", self.workflow)
         self.assertIn(".github/cookbook-image-matrix.json", self.workflow)
+        pr_job = self.workflow.split("  build-pr:", 1)[1].split("  build-release:", 1)[0]
+        release_job = self.workflow.split("  build-release:", 1)[1].split("  promote:", 1)[0]
+        self.assertIn("push: false", pr_job)
+        self.assertNotIn("packages: write", pr_job)
+        self.assertIn("packages: write", release_job)
 
     def test_workflow_labels_and_checks_the_definition_digest(self):
         self.assertIn("ai.labpod.image.build-input-digest", self.workflow)
