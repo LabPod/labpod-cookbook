@@ -3,9 +3,9 @@
 
 LabPod's template gallery has two sections split by source: Built-in is the
 catalogue embedded in the server binary, Cookbook is this repository. The
-server never fetches it — the browser does (pkgpl/labpod#1177: no server SSRF
-surface, and a LabPod server still needs no internet). So this file is the
-whole contract between the two repos, served over raw.githubusercontent.com.
+server never fetches it — the browser does, so a LabPod install needs no
+internet access of its own. So this file is the whole contract between the two
+repos, served over raw.githubusercontent.com.
 
 Every field is derived from the bundles themselves. Nothing here is
 hand-maintained, because a hand-copied catalogue drifts from the bundles
