@@ -101,30 +101,11 @@ symptom is a gallery card that installs something other than what it advertises.
 `scripts/build-index.py` (or `--check` to verify); `tests/test_index.py` fails on any drift, and
 CI regenerates it in the same commit that rebuilds the tars.
 
-### About `bundle_sha256`
-
-Each entry carries the SHA-256 of its tar. What that digest is and isn't good for:
-
-**It is accurate.** `tests/test_index.py` hashes the committed tar and fails if the index
-disagrees, so the value always describes the artifact this repo serves — not merely the one in
-someone's working tree.
-
-**It is not what protects the download.** Transport integrity is HTTPS to
-`raw.githubusercontent.com`. The digest is a defence against this repo publishing an index that
-describes a different tar than the one at `bundle_url`, which is a content-consistency problem,
-not a transport one.
-
-**A consumer often cannot check it.** Hashing bytes in a browser needs `crypto.subtle`, which
-exists only in a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts).
-LabPod's default deployment is a plain-HTTP LAN IP with no domain, so on that deployment
-`crypto.subtle` is `undefined` and the check simply cannot run. It does run where the page has a
-secure context — LabPod with opt-in TLS enabled, or LabPod Connect's SSH tunnel, which loads the
-workspace from `127.0.0.1`.
-
-So a consumer should treat verification as **best-effort**: verify when the API is available,
-refuse the import on a mismatch, proceed when verification is unavailable, and never show an
-integrity indicator for a check it did not actually perform. Claiming a guarantee you did not
-verify is worse than showing nothing.
+`bundle_sha256` is the SHA-256 of the tar at `bundle_url`. `tests/test_index.py` hashes the
+committed tar and fails if the index disagrees, so the value always describes the artifact this
+repo actually serves. It exists so a consumer can confirm it received the tar this index
+describes; transport integrity itself is HTTPS to `raw.githubusercontent.com`. Whether and how a
+given client verifies it is that client's decision.
 
 ## How to use a cookbook
 
