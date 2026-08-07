@@ -98,6 +98,46 @@ class TestEntriesAgreeWithTheirBundle(unittest.TestCase):
             expected = [p["name"] for p in (bundle.get("ports") or [])]
             self.assertEqual(entry(cookbook_dir.name)["ports"], expected, cookbook_dir.name)
 
+    # Both GPU fields read through a False default, so a schema rename would
+    # turn every GPU bundle into a CPU card with nothing failing: the
+    # researcher creates the workspace with no GPU attached and the run falls
+    # back to CPU or dies at CUDA init.
+    def test_gpu_expectation_matches_the_bundle(self):
+        for cookbook_dir in BUNDLE_DIRS:
+            bundle = json.loads((cookbook_dir / "template" / "bundle.json").read_text())
+            defaults = bundle.get("defaults") or {}
+            item = entry(cookbook_dir.name)
+            self.assertEqual(
+                item["gpu_required"], bool(defaults.get("gpu_required", False)), cookbook_dir.name
+            )
+            self.assertEqual(
+                item["gpu_default"], bool(defaults.get("gpu_default", False)), cookbook_dir.name
+            )
+
+    def test_at_least_one_bundle_expects_a_gpu(self):
+        self.assertTrue(
+            any(item["gpu_default"] or item["gpu_required"] for item in INDEX["bundles"]),
+            "no bundle expects a GPU — the fields are probably reading through their default",
+        )
+
+    # A licence-gated bundle cannot be enabled until its terms are accepted.
+    # Omitting that sends the researcher through an image build first.
+    def test_eula_gate_and_terms_url_match_the_bundle(self):
+        for cookbook_dir in BUNDLE_DIRS:
+            bundle = json.loads((cookbook_dir / "template" / "bundle.json").read_text())
+            item = entry(cookbook_dir.name)
+            self.assertEqual(
+                item["requires_eula"], bool(bundle.get("requires_eula", False)), cookbook_dir.name
+            )
+            self.assertEqual(
+                item.get("terms_url", ""), bundle.get("terms_url", ""), cookbook_dir.name
+            )
+
+    def test_the_licence_gated_bundle_is_flagged(self):
+        matlab = entry("matlab-deep-learning")
+        self.assertTrue(matlab["requires_eula"])
+        self.assertTrue(matlab.get("terms_url", "").startswith("https://"))
+
 
 class TestBundleArtifactIsTrustworthy(unittest.TestCase):
     # The browser fetches bundle_url and hands the bytes to LabPod's importer.
@@ -120,7 +160,15 @@ class TestBundleArtifactIsTrustworthy(unittest.TestCase):
                 f"/dist/{item['id']}.labpod-bundle.tar",
                 item["id"],
             )
-            self.assertTrue(item["docs_url"].startswith("https://github.com/LabPod/labpod-cookbook/"))
+            # Pinned exactly, like bundle_url. A prefix check would stay green
+            # if the generator ever interpolated the wrong field here — the
+            # bundles carry an `id_hint` that differs from the directory name —
+            # and every card's docs link would point at another bundle or a 404.
+            self.assertEqual(
+                item["docs_url"],
+                f"https://github.com/LabPod/labpod-cookbook/tree/main/{item['id']}",
+                item["id"],
+            )
 
     # LabPod rejects a bundle over 1 MiB, so an entry above the cap advertises
     # an import that cannot succeed.

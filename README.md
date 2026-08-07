@@ -84,8 +84,14 @@ cannot be redistributed by LabPod, so it remains a local build from the shipped 
 ## Machine-readable index
 
 [`index.json`](index.json) lists every bundle in this repo — name, description, the image ref a
-researcher actually receives, whether it pulls or needs a build, GPU expectation, launcher
-ports, and each tar's URL, byte size, and SHA-256.
+researcher actually receives, whether it pulls or needs a build, whether enabling it requires
+accepting a licence (`requires_eula` / `terms_url`), GPU expectation, launcher ports, and each
+tar's URL, byte size, and SHA-256.
+
+`image` is the ref a researcher actually gets: the pinned published image when the bundle has
+one, otherwise the bundle's own ref (a `localhost/…` ref means an administrator must build it,
+which `requires_build` also flags). `image_variants` lists **only the alternates** — the default
+is already in `image`, so the full set to offer is `[image] + image_variants`.
 
 It exists so LabPod's template gallery can show this repo as its **Cookbook templates** section.
 The LabPod *browser* fetches it directly; the LabPod *server* never does, so a LabPod
@@ -169,7 +175,12 @@ directly (GitHub release-asset download URLs don't send CORS headers, so they do
 that; committed repo files do). The same reasoning puts `index.json` in the repo rather than on a
 release. CI (`.github/workflows/build-bundles.yml`) rebuilds and commits every bundle's tar
 automatically on push — and regenerates `index.json` in the same commit, since the index records
-each tar's size and digest — so you generally don't need to run either by hand.
+each tar's size and digest.
+
+In a **pull request** that CI auto-commit has not happened yet, and the PR gate checks the
+committed files rather than regenerating them — so rebuild the tar and run
+`scripts/build-index.py` for any bundle you change, and commit both. `scripts/build-index.py
+--check` tells you whether the index is current.
 
 ## Contributing a cookbook
 

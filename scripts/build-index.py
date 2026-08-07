@@ -37,7 +37,7 @@ def bundle_dirs():
 
 def entry_for(cookbook_dir):
     cookbook = cookbook_dir.name
-    bundle = json.loads((cookbook_dir / "template" / "bundle.json").read_text())
+    bundle = json.loads((cookbook_dir / "template" / "bundle.json").read_text(encoding="utf-8"))
     image = bundle.get("image") or {}
     published = image.get("published") or {}
     defaults = bundle.get("defaults") or {}
@@ -47,6 +47,16 @@ def entry_for(cookbook_dir):
         raise SystemExit(f"error: {cookbook} has no built tar at {tar_path}")
     tar_bytes = tar_path.read_bytes()
 
+    # Index by direct lookup, not .get(): a bundle missing `name` should fail
+    # generation as loudly as one missing its tar. Defaulting to "" would ship
+    # a gallery card with a blank title and no test would notice.
+    try:
+        name = bundle["name"]
+        description = bundle["description"]
+        kind = bundle["type"]
+    except KeyError as missing:
+        raise SystemExit(f"error: {cookbook}/template/bundle.json has no {missing}") from None
+
     # The ref a researcher actually receives. A published bundle pulls its
     # pinned image; everything else resolves to the bundle's own ref, which
     # for a `localhost/` entry means an administrator has to build it.
@@ -54,12 +64,16 @@ def entry_for(cookbook_dir):
 
     entry = {
         "id": cookbook,
-        "name": bundle.get("name", ""),
-        "description": bundle.get("description", ""),
-        "type": bundle.get("type", ""),
+        "name": name,
+        "description": description,
+        "type": kind,
         "image": effective_ref,
         "published": bool(published),
         "requires_build": effective_ref.startswith("localhost/"),
+        # A licence-gated bundle cannot be enabled until its terms are
+        # accepted, so a card that omits this sends the researcher through an
+        # image build before they discover they may not be entitled to accept.
+        "requires_eula": bool(bundle.get("requires_eula", False)),
         "gpu_required": bool(defaults.get("gpu_required", False)),
         "gpu_default": bool(defaults.get("gpu_default", False)),
         "ports": [p.get("name", "") for p in (bundle.get("ports") or [])],
@@ -68,6 +82,11 @@ def entry_for(cookbook_dir):
         "bundle_sha256": "sha256:" + hashlib.sha256(tar_bytes).hexdigest(),
         "docs_url": f"{REPO_BASE}/{cookbook}",
     }
+    if bundle.get("terms_url"):
+        entry["terms_url"] = bundle["terms_url"]
+    # Alternates only — `image` already carries the default, so the full set a
+    # picker should offer is `[image] + image_variants`. Naming it "variants"
+    # and then including the default would double-list it.
     if published.get("variants"):
         entry["image_variants"] = [v["ref"] for v in published["variants"]]
     return entry
@@ -91,14 +110,17 @@ def main():
     args = parser.parse_args()
 
     rendered = render(build())
+    # Explicit UTF-8 both ways: render() keeps non-ASCII literal, so a
+    # C/POSIX-locale runner would otherwise die on UnicodeEncodeError writing
+    # it, or UnicodeDecodeError comparing it, instead of reporting drift.
     if not args.check:
-        INDEX_PATH.write_text(rendered)
+        INDEX_PATH.write_text(rendered, encoding="utf-8")
         return 0
 
     if not INDEX_PATH.is_file():
         print("error: index.json is missing; run scripts/build-index.py", file=sys.stderr)
         return 1
-    if INDEX_PATH.read_text() != rendered:
+    if INDEX_PATH.read_text(encoding="utf-8") != rendered:
         print(
             "error: index.json is stale; run scripts/build-index.py and commit the result",
             file=sys.stderr,

@@ -35,8 +35,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      # Named rather than discovered: the index contract lives in tests/ too,
+      # but it is validated by build-bundles.yml, which rebuilds the tars it
+      # describes. Discovering it here would fail this job — and with it every
+      # image build and publish that `needs: contract` — whenever a bundle.json
+      # change left the index to be regenerated, over a file no image build reads.
       - name: Test bundle and publishing contracts
-        run: python3 -m unittest discover -s tests -v
+        run: python3 -m unittest tests.test_published_images -v
 
       - name: Verify every canonical definition digest
         run: |

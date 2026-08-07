@@ -10,6 +10,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-bioinformatics-alignment:v1-cpu",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [
@@ -28,6 +29,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-cheminformatics:v1-cpu",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [
@@ -46,6 +48,7 @@
       "image": "docker.io/gromacs/gromacs:gmx-2022.2-cuda-11.6.0-avx",
       "published": false,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": true,
       "ports": [],
@@ -62,6 +65,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu126",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": true,
       "ports": [
@@ -84,6 +88,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-materials-science:v1-cpu",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [
@@ -102,6 +107,7 @@
       "image": "localhost/labpod-cookbook/matlab-deep-learning:r2024b",
       "published": false,
       "requires_build": true,
+      "requires_eula": true,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [
@@ -110,7 +116,8 @@
       "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/matlab-deep-learning.labpod-bundle.tar",
       "bundle_bytes": 10240,
       "bundle_sha256": "sha256:aba56d931d22a105b4a9673d785020eec34344f57b69b2e3d878bb9dec0684b3",
-      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/matlab-deep-learning"
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/matlab-deep-learning",
+      "terms_url": "https://www.mathworks.com/help/install/license/eula.html"
     },
     {
       "id": "openfoam-cfd",
@@ -120,6 +127,7 @@
       "image": "docker.io/opencfd/openfoam-default:2512",
       "published": false,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [],
@@ -136,6 +144,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu126",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": true,
       "ports": [
@@ -160,6 +169,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-quantum-chemistry:v1-cpu",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [
@@ -178,6 +188,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-quantum-computing:v1-cpu",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [
@@ -196,6 +207,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-r-statistics:v1-cpu",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [
@@ -215,6 +227,7 @@
       "image": "ghcr.io/labpod/labpod-cookbook-seismology:v1-cpu",
       "published": true,
       "requires_build": false,
+      "requires_eula": false,
       "gpu_required": false,
       "gpu_default": false,
       "ports": [

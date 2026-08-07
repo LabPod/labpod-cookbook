@@ -8,6 +8,7 @@ on:
       - "*/template/**"
       - "scripts/build-bundle.sh"
       - "scripts/build-index.py"
+      - "index.json"
       - ".github/workflows/build-bundles.yml"
   pull_request:
     paths:
@@ -15,15 +16,15 @@ on:
       - "*/template/**"
       - "scripts/build-bundle.sh"
       - "scripts/build-index.py"
-      # PR-only: a hand-edited index has to fail its contract here. Keeping it
-      # out of the push paths above is what stops this workflow's own commit
-      # from retriggering it.
       - "index.json"
       - ".github/workflows/build-bundles.yml"
   workflow_dispatch: {}
 
-# The push this workflow makes only touches dist/ and index.json, neither of
-# which is in the push trigger paths above, so it does not retrigger itself.
+# This workflow commits dist/ and index.json, which are in its own push paths,
+# so the loop is broken by content rather than by path: both are generated
+# deterministically from the tree, so a rerun regenerates identical bytes, the
+# commit step's `git diff --cached --quiet` finds nothing to commit, and no
+# push happens. The `[skip ci]` marker on the commit is the second stop.
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -108,14 +109,27 @@ jobs:
             fi
           done
 
-      # index.json carries each tar's size and digest, so it is only correct
-      # once the tars above are final. Regenerating here keeps the pair
-      # consistent in the same commit rather than in a follow-up.
-      - name: Regenerate index.json
-        run: python3 scripts/build-index.py
+      # Order matters. On a PR the committed index must already describe the
+      # tars just rebuilt above, so check it BEFORE touching it — regenerating
+      # first would overwrite whatever the PR proposes and make this gate
+      # unfailable, including for a hand-edited index that points at another
+      # image entirely.
+      - name: Verify the committed index
+        if: github.event_name != 'push'
+        run: |
+          set -euo pipefail
+          python3 scripts/build-index.py --check
+          python3 -m unittest tests.test_index -v
 
-      - name: Test the index contract
-        run: python3 -m unittest tests.test_index -v
+      # On main the tars above may legitimately have changed, which makes the
+      # committed index stale by construction; regenerate and let the commit
+      # step below carry both. The test runs after, against what will ship.
+      - name: Regenerate index.json
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          python3 scripts/build-index.py
+          python3 -m unittest tests.test_index -v
 
       - name: Commit updated tars and index
         if: github.event_name == 'push'
