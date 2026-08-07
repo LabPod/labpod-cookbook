@@ -15,11 +15,15 @@ on:
       - "*/template/**"
       - "scripts/build-bundle.sh"
       - "scripts/build-index.py"
+      # PR-only: a hand-edited index has to fail its contract here. Keeping it
+      # out of the push paths above is what stops this workflow's own commit
+      # from retriggering it.
+      - "index.json"
       - ".github/workflows/build-bundles.yml"
   workflow_dispatch: {}
 
 # The push this workflow makes only touches dist/ and index.json, neither of
-# which is in the trigger paths above, so it does not retrigger itself.
+# which is in the push trigger paths above, so it does not retrigger itself.
 jobs:
   build:
     runs-on: ubuntu-latest

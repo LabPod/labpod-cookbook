@@ -8,8 +8,6 @@ on:
       - ".github/cookbook-image-matrix.json"
       - ".github/workflows/publish-images.yml"
       - "scripts/definition-digest.py"
-      - "scripts/build-index.py"
-      - "index.json"
       - "tests/**"
   push:
     branches: [main]
