@@ -1,0 +1,229 @@
+{
+  "schema_version": "1",
+  "kind": "labpod.cookbook.index",
+  "bundles": [
+    {
+      "id": "bioinformatics-alignment",
+      "name": "Bioinformatics: Read Alignment (Cookbook)",
+      "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312) plus samtools and bwa, built from this template's Dockerfile. Covers the most common shared-workstation genomics workload: aligning sequencing reads to a reference with BWA, then sorting/indexing/inspecting the result with samtools. See github.com/LabPod/labpod-cookbook/tree/main/bioinformatics-alignment.",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-bioinformatics-alignment:v1-cpu",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "jupyter"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/bioinformatics-alignment.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:f9e53bb7cfc880b1284da9a6ecf574e56feb5053eff33edc9fcc336ac4d9933e",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/bioinformatics-alignment"
+    },
+    {
+      "id": "cheminformatics",
+      "name": "Cheminformatics (Cookbook)",
+      "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus rdkit, built from this template's Dockerfile. Molecule parsing, descriptors, and similarity search. See github.com/LabPod/labpod-cookbook/tree/main/cheminformatics.",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-cheminformatics:v1-cpu",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "jupyter"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/cheminformatics.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:4c54fa1d0cc567db6b89faa9d7adc325e1ac89119746e6d10f65f69d0151cf43",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/cheminformatics"
+    },
+    {
+      "id": "gromacs-md",
+      "name": "GROMACS Molecular Dynamics (Cookbook)",
+      "description": "The official gromacs/gromacs image (CUDA-enabled build, runs fine CPU-only too if no GPU is allocated), no custom Dockerfile. Pull the registry image from LabPod Images after importing, then enable. Terminal-only - run gmx commands through LabPod's Terminal. See github.com/LabPod/labpod-cookbook/tree/main/gromacs-md.",
+      "type": "terminal",
+      "image": "docker.io/gromacs/gromacs:gmx-2022.2-cuda-11.6.0-avx",
+      "published": false,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": true,
+      "ports": [],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/gromacs-md.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:d64920f42e4f6d2870b5fbd4aa55a957ee5b086e23e14d016c61c3c845ae1898",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/gromacs-md"
+    },
+    {
+      "id": "huggingface",
+      "name": "Hugging Face Basics (Cookbook)",
+      "description": "PyTorch JupyterLab on the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:v1-cu126) plus transformers + accelerate (see context/requirements.txt), built from this template's Dockerfile. Unlike the other labpod-cookbook environments, notebooks here download pretrained model weights from the Hugging Face Hub at runtime, so the workspace needs internet access the first time each model is used (weights cache under HF_HOME, which LabPod redirects to /work/.hf-cache, so they persist across stop/start).",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu126",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": true,
+      "ports": [
+        "jupyter"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/huggingface.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:715eaf1a2c93e7309865a8ab7c78d9a7ae6ebd9ae1cf2eb1ff8182fec9a8685b",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/huggingface",
+      "image_variants": [
+        "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu121",
+        "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu129"
+      ]
+    },
+    {
+      "id": "materials-science",
+      "name": "Materials Science (Cookbook)",
+      "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus ase, built from this template's Dockerfile. Crystal structure, lattice constants, and geometry optimization with ASE (Atomic Simulation Environment). See github.com/LabPod/labpod-cookbook/tree/main/materials-science.",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-materials-science:v1-cpu",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "jupyter"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/materials-science.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:c5ae5b815341c0047fe514d11ab1bbbef192c6f6a6dd9fede9df6cf3d80dedb7",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/materials-science"
+    },
+    {
+      "id": "matlab-deep-learning",
+      "name": "MATLAB Deep Learning (Cookbook)",
+      "description": "MATLAB in the browser via MathWorks matlab-proxy, on the mathworks/matlab-deep-learning base image (Deep Learning Toolbox included - LabPod's built-in MATLAB template uses the plain matlab image, which doesn't have it). Bring your own MATLAB license, with Deep Learning Toolbox and Parallel Computing Toolbox entitlements specifically. Build this template's bundled Dockerfile, then enable it. Opt-in; requires EULA/license acknowledgement.",
+      "type": "matlab",
+      "image": "localhost/labpod-cookbook/matlab-deep-learning:r2024b",
+      "published": false,
+      "requires_build": true,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "matlab"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/matlab-deep-learning.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:aba56d931d22a105b4a9673d785020eec34344f57b69b2e3d878bb9dec0684b3",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/matlab-deep-learning"
+    },
+    {
+      "id": "openfoam-cfd",
+      "name": "OpenFOAM CFD (Cookbook)",
+      "description": "The official OpenCFD OpenFOAM image (runtime + tutorials), no custom Dockerfile. Pull the registry image from LabPod Images after importing, then enable. Terminal-only - work through LabPod's Terminal running OpenFOAM command-line tools (blockMesh, icoFoam, etc.). See github.com/LabPod/labpod-cookbook/tree/main/openfoam-cfd.",
+      "type": "terminal",
+      "image": "docker.io/opencfd/openfoam-default:2512",
+      "published": false,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/openfoam-cfd.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:6d451924d860d1e7182972e560169ee07833ee4e92fb0faf8cf37463d04dfbe8",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/openfoam-cfd"
+    },
+    {
+      "id": "pytorch-scientific-ml",
+      "name": "PyTorch Scientific ML (Cookbook)",
+      "description": "PyTorch JupyterLab with TensorBoard inherited from the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:v1-cu126), plus MLflow added by this template's Dockerfile (see context/requirements.txt). Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu126",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": true,
+      "ports": [
+        "jupyter",
+        "tensorboard",
+        "mlflow"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/pytorch-scientific-ml.labpod-bundle.tar",
+      "bundle_bytes": 20480,
+      "bundle_sha256": "sha256:88daba0449776a44311ddb78ef04e27643e6fe562cf97500e3e0679833482e71",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml",
+      "image_variants": [
+        "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu121",
+        "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu129"
+      ]
+    },
+    {
+      "id": "quantum-chemistry",
+      "name": "Quantum Chemistry (Cookbook)",
+      "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus pyscf, built from this template's Dockerfile. Electronic structure calculations - how molecules' electrons actually behave. See github.com/LabPod/labpod-cookbook/tree/main/quantum-chemistry.",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-quantum-chemistry:v1-cpu",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "jupyter"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/quantum-chemistry.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:c0816bdfae66ff178fc4b617e5040d4c404a642e906999d004ce4da52ea7a471",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/quantum-chemistry"
+    },
+    {
+      "id": "quantum-computing",
+      "name": "Quantum Computing (Cookbook)",
+      "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus qiskit and qiskit-aer, built from this template's Dockerfile. Quantum circuit simulation - qubits, gates, entanglement. See github.com/LabPod/labpod-cookbook/tree/main/quantum-computing.",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-quantum-computing:v1-cpu",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "jupyter"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/quantum-computing.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:74290ca2de2c150d2e8ec1cdade798a4f0aaa9fd2dd4480508a0ad541621a78b",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/quantum-computing"
+    },
+    {
+      "id": "r-statistics",
+      "name": "R Statistics (Cookbook)",
+      "description": "CPU-only R 4.5 statistics workspace built from this template's Dockerfile on the rocker/tidyverse base, with both RStudio Server and JupyterLab (R + Python kernels). Mixed models (lme4), GAMs (mgcv), survival, glmnet, tidymodels, forecasting, lavaan/mice, plus pandas/statsmodels/scikit-learn and a shared interpreter so reticulate and arrow move data between R and Python. See github.com/LabPod/labpod-cookbook/tree/main/r-statistics.",
+      "type": "composite",
+      "image": "ghcr.io/labpod/labpod-cookbook-r-statistics:v1-cpu",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "jupyter",
+        "rstudio"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/r-statistics.labpod-bundle.tar",
+      "bundle_bytes": 20480,
+      "bundle_sha256": "sha256:eee9bcf26b508fe3fd00a3354a7c24bb738164812173049f595beb081db8ccd5",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/r-statistics"
+    },
+    {
+      "id": "seismology",
+      "name": "Seismology (Cookbook)",
+      "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus obspy, built from this template's Dockerfile. Real seismic waveform processing - filtering, basic feature extraction. See github.com/LabPod/labpod-cookbook/tree/main/seismology.",
+      "type": "jupyter",
+      "image": "ghcr.io/labpod/labpod-cookbook-seismology:v1-cpu",
+      "published": true,
+      "requires_build": false,
+      "gpu_required": false,
+      "gpu_default": false,
+      "ports": [
+        "jupyter"
+      ],
+      "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/seismology.labpod-bundle.tar",
+      "bundle_bytes": 10240,
+      "bundle_sha256": "sha256:988454710ab843a6edbc96385603c13f560ddc9c50f451eed872dcecde5ffd0d",
+      "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/seismology"
+    }
+  ]
+}

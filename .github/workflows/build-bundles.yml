@@ -7,17 +7,19 @@ on:
       - "**/*.ipynb"
       - "*/template/**"
       - "scripts/build-bundle.sh"
+      - "scripts/build-index.py"
       - ".github/workflows/build-bundles.yml"
   pull_request:
     paths:
       - "**/*.ipynb"
       - "*/template/**"
       - "scripts/build-bundle.sh"
+      - "scripts/build-index.py"
       - ".github/workflows/build-bundles.yml"
   workflow_dispatch: {}
 
-# The push this workflow makes only touches dist/, which isn't in the
-# trigger paths above, so it does not retrigger itself.
+# The push this workflow makes only touches dist/ and index.json, neither of
+# which is in the trigger paths above, so it does not retrigger itself.
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -102,16 +104,25 @@ jobs:
             fi
           done
 
-      - name: Commit updated tars
+      # index.json carries each tar's size and digest, so it is only correct
+      # once the tars above are final. Regenerating here keeps the pair
+      # consistent in the same commit rather than in a follow-up.
+      - name: Regenerate index.json
+        run: python3 scripts/build-index.py
+
+      - name: Test the index contract
+        run: python3 -m unittest tests.test_index -v
+
+      - name: Commit updated tars and index
         if: github.event_name == 'push'
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dist/
+          git add dist/ index.json
           if git diff --cached --quiet; then
             echo "no changes"
           else
-            git commit -m "chore: rebuild bundle tars [skip ci]"
+            git commit -m "chore: rebuild bundle tars and index [skip ci]"
             git push
           fi

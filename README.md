@@ -81,6 +81,26 @@ moving base. `r-statistics` pins its upstream `rocker/tidyverse` release directl
 `matlab-deep-learning` intentionally has no published image. Its licensed MathWorks contents
 cannot be redistributed by LabPod, so it remains a local build from the shipped Dockerfile.
 
+## Machine-readable index
+
+[`index.json`](index.json) lists every bundle in this repo — name, description, the image ref a
+researcher actually receives, whether it pulls or needs a build, GPU expectation, launcher
+ports, and each tar's URL, byte size, and SHA-256.
+
+It exists so LabPod's template gallery can show this repo as its **Cookbook templates** section.
+The LabPod *browser* fetches it directly; the LabPod *server* never does, so a LabPod
+installation still needs no internet access of its own and gains no outbound-fetch surface.
+
+```
+https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/index.json
+```
+
+Every field is generated from the bundles by `scripts/build-index.py` — nothing in it is
+hand-maintained, because a hand-copied catalogue drifts from the bundles silently and the first
+symptom is a gallery card that installs something other than what it advertises. Regenerate with
+`scripts/build-index.py` (or `--check` to verify); `tests/test_index.py` fails on any drift, and
+CI regenerates it in the same commit that rebuilds the tars.
+
 ## How to use a cookbook
 
 1. **Import the environment.** Use the bundle's raw URL:
@@ -140,8 +160,10 @@ Built tars are committed to this repo under `dist/` rather than published only a
 assets - LabPod's own format caps a bundle tar at 1 MiB, so this is cheap, and it means every
 tar is reachable at a stable `raw.githubusercontent.com` URL that a browser can `fetch()`
 directly (GitHub release-asset download URLs don't send CORS headers, so they don't work for
-that; committed repo files do). CI (`.github/workflows/build-bundles.yml`) rebuilds and commits
-every bundle's tar automatically on push, so you generally don't need to run this by hand.
+that; committed repo files do). The same reasoning puts `index.json` in the repo rather than on a
+release. CI (`.github/workflows/build-bundles.yml`) rebuilds and commits every bundle's tar
+automatically on push — and regenerates `index.json` in the same commit, since the index records
+each tar's size and digest — so you generally don't need to run either by hand.
 
 ## Contributing a cookbook
 
