@@ -9,6 +9,10 @@
     "ref": "localhost/labpod-cookbook/r-statistics:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-r-statistics:v1-cpu",
+      "definition_digest": "sha256:1393337b07d4431ba986d1a5df02f5c7e8a23dc5d979b8636bb61d6142553af8"
     }
   },
   "defaults": {

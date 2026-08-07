@@ -10,6 +10,10 @@ a network license manager (`MLM_LICENSE_FILE=port@host`) or MathWorks online lic
 no way around this; if your lab doesn't have such a license, this cookbook isn't usable, same as
 LabPod's own built-in MATLAB template.
 
+This image is **not published**: the licensed MathWorks contents cannot be redistributed by
+LabPod. MATLAB therefore remains an explicit **local build** from the bundled Dockerfile rather
+than using the prebuilt-image path used by redistributable cookbooks.
+
 Build steps:
 1. Import this bundle with **Build now** checked, or import with **Build later** and click
    **Build** from My templates. This is a real image build: it pulls the MathWorks base image and

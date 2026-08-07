@@ -43,8 +43,43 @@ All `pytorch-scientific-ml` notebooks use synthetic/toy data generated in the no
 no dataset download required, so they work on an offline / air-gapped workspace too. Every
 notebook except `ddp_basics.py` logs to TensorBoard, and the `transformer`, `gnn`, and `unet`
 examples also log MLflow runs to `/work/mlruns` for comparing parameters, metrics, models, and
-artifacts. The bundle's Dockerfile bakes both tools in, so the TensorBoard and MLflow apps just
-work after building.
+artifacts. The published image includes both tools, so the TensorBoard and MLflow apps just work.
+
+## Prebuilt images
+
+Redistributable Dockerfile bundles declare immutable `v1-*` images. LabPod pulls a published
+image when the imported definition still matches its canonical definition digest, while keeping
+the bundled Dockerfile and context available for inspection, customization, air-gapped fallback,
+and a local build after a real change. Pull sizes are approximate compressed transfers and may
+vary slightly with registry metadata.
+
+Each package page lists every published tag alongside the build provenance and SBOM attestations
+the publishing workflow records.
+
+| Bundle | Immutable tag(s) | Approximate pull size |
+|---|---|---|
+| [bioinformatics-alignment](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-bioinformatics-alignment) | `v1-cpu` | 300 MB |
+| [cheminformatics](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-cheminformatics) | `v1-cpu` | 380 MB |
+| [huggingface](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-huggingface) | `v1-cu121`, `v1-cu126`, `v1-cu129` | 4.8 GB, 5.4 GB, 7.4 GB |
+| [materials-science](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-materials-science) | `v1-cpu` | 300 MB |
+| [pytorch-scientific-ml](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-pytorch-scientific-ml) | `v1-cu121`, `v1-cu126`, `v1-cu129` | 5.0 GB, 5.7 GB, 7.7 GB |
+| [quantum-chemistry](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-quantum-chemistry) | `v1-cpu` | 430 MB |
+| [quantum-computing](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-quantum-computing) | `v1-cpu` | 420 MB |
+| [r-statistics](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-r-statistics) | `v1-cpu` | 2.8 GB |
+| [seismology](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-seismology) | `v1-cpu` | 360 MB |
+
+The CUDA bundles publish one tag per CUDA line, and LabPod selects the one your host's NVIDIA
+driver and GPU architecture can actually run — a lab on an older driver gets `v1-cu121` instead
+of a `v1-cu129` image that would not start.
+
+Every bundle builds on a LabPod base image from
+[`LabPod/labpod-images`](https://github.com/LabPod/labpod-images) — `scipy-jupyter` for the CPU
+science stacks, `pytorch-jupyter` for the CUDA ones — pinned to an immutable `v1-*` tag, so a
+local rebuild of an unmodified bundle reproduces the published image instead of drifting with a
+moving base. `r-statistics` pins its upstream `rocker/tidyverse` release directly.
+
+`matlab-deep-learning` intentionally has no published image. Its licensed MathWorks contents
+cannot be redistributed by LabPod, so it remains a local build from the shipped Dockerfile.
 
 ## How to use a cookbook
 
@@ -53,10 +88,11 @@ work after building.
    in LabPod's **My templates → Import → bundle URL** field, or download the `.tar` and use the
    file picker. This creates a private, disabled template for review.
 2. **Prepare the image.**
-   - Dockerfile bundles: leave **Build now** checked when importing, or import with **Build later**
-     and click **Build** from My templates afterward. The build creates the private image ref
-     declared in the bundle, usually `localhost/labpod-cookbook/<bundle>:latest`, reused by every
-     workspace made from that template.
+   - Published Dockerfile bundles: leave preparation enabled. LabPod pulls the immutable
+     published image when the definition digest matches. If you edit the context, or if a pull
+     is unavailable on an air-gapped host, use the bundled Dockerfile to build the unchanged
+     local fallback ref under `localhost/labpod-cookbook/`.
+   - MATLAB: build locally because LabPod cannot redistribute the licensed image contents.
    - Pull-only bundles (`gromacs-md`, `openfoam-cfd`): there is no Dockerfile to build. Pull the
      image ref shown in the template from **Images** first, then enable the template.
 3. **Enable it**, then create a workspace from the template.

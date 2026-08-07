@@ -3,12 +3,16 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-quantum-computing",
   "name": "Quantum Computing (Cookbook)",
-  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:py312; no CUDA needed) plus qiskit and qiskit-aer, built from this template's Dockerfile. Quantum circuit simulation - qubits, gates, entanglement. See github.com/LabPod/labpod-cookbook/tree/main/quantum-computing.",
+  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus qiskit and qiskit-aer, built from this template's Dockerfile. Quantum circuit simulation - qubits, gates, entanglement. See github.com/LabPod/labpod-cookbook/tree/main/quantum-computing.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/quantum-computing:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-quantum-computing:v1-cpu",
+      "definition_digest": "sha256:b2357cfef63b8b042ec975dccd291d58cbf86d3f24423a37b42aa70a4d281922"
     }
   },
   "defaults": {

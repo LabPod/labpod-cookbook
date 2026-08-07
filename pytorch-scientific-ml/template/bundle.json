@@ -3,12 +3,32 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-pytorch-scientific-ml",
   "name": "PyTorch Scientific ML (Cookbook)",
-  "description": "PyTorch JupyterLab with TensorBoard inherited from the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:cu126), plus MLflow added by this template's Dockerfile (see context/requirements.txt). Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
+  "description": "PyTorch JupyterLab with TensorBoard inherited from the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:v1-cu126), plus MLflow added by this template's Dockerfile (see context/requirements.txt). Shared by several labpod-cookbook notebooks; most log training curves for TensorBoard, and selected examples also log MLflow runs, metrics, models, and artifacts - import and build this once, then run any of them. See github.com/LabPod/labpod-cookbook/tree/main/pytorch-scientific-ml.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/pytorch-scientific-ml:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu126",
+      "definition_digest": "sha256:ed80b2eca52b43d75d55f5988de9e7f305d1f2ba906bb7c856e39e5e7bdeec1e",
+      "variants": [
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu121",
+          "definition_digest": "sha256:c2dcf9977cefe091c3a0844d79b70e8bb182fd6c458646a53029cead703c0458",
+          "build_args": {
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:v1-cu121"
+          }
+        },
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu129",
+          "definition_digest": "sha256:c22434e92ff8d4d70b39d18f98f6ef6b452273b62138f8f54facb49e9aa3ec83",
+          "build_args": {
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:v1-cu129"
+          }
+        }
+      ]
     }
   },
   "defaults": {

@@ -3,12 +3,32 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-huggingface",
   "name": "Hugging Face Basics (Cookbook)",
-  "description": "PyTorch JupyterLab on the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:cu126) plus transformers + accelerate (see context/requirements.txt), built from this template's Dockerfile. Unlike the other labpod-cookbook environments, notebooks here download pretrained model weights from the Hugging Face Hub at runtime, so the workspace needs internet access the first time each model is used (weights cache under HF_HOME, which LabPod redirects to /work/.hf-cache, so they persist across stop/start).",
+  "description": "PyTorch JupyterLab on the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:v1-cu126) plus transformers + accelerate (see context/requirements.txt), built from this template's Dockerfile. Unlike the other labpod-cookbook environments, notebooks here download pretrained model weights from the Hugging Face Hub at runtime, so the workspace needs internet access the first time each model is used (weights cache under HF_HOME, which LabPod redirects to /work/.hf-cache, so they persist across stop/start).",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/huggingface:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu126",
+      "definition_digest": "sha256:899dea9f8ac5f5468f551ecc14408068f18c6acbf504844d4184ca4f27d898c7",
+      "variants": [
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu121",
+          "definition_digest": "sha256:07224e5f08bd63fe6988e61f483b7402780ffad9bdbf2cafe7ad14e49a21245f",
+          "build_args": {
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:v1-cu121"
+          }
+        },
+        {
+          "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu129",
+          "definition_digest": "sha256:745f8ed8832460d0451961c85a1793935177c1d36b9f647b1f7b9a7fafd61f9f",
+          "build_args": {
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:v1-cu129"
+          }
+        }
+      ]
     }
   },
   "defaults": {

@@ -3,12 +3,16 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-materials-science",
   "name": "Materials Science (Cookbook)",
-  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:py312; no CUDA needed) plus ase, built from this template's Dockerfile. Crystal structure, lattice constants, and geometry optimization with ASE (Atomic Simulation Environment). See github.com/LabPod/labpod-cookbook/tree/main/materials-science.",
+  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus ase, built from this template's Dockerfile. Crystal structure, lattice constants, and geometry optimization with ASE (Atomic Simulation Environment). See github.com/LabPod/labpod-cookbook/tree/main/materials-science.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/materials-science:latest",
     "dockerfile": {
       "path": "Dockerfile"
+    },
+    "published": {
+      "ref": "ghcr.io/labpod/labpod-cookbook-materials-science:v1-cpu",
+      "definition_digest": "sha256:5a49cb319a42734addc1bc7514b2cf8ec882f097f06cab370c863709f965b9a1"
     }
   },
   "defaults": {
