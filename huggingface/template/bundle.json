@@ -12,20 +12,20 @@
     },
     "published": {
       "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu126",
-      "definition_digest": "sha256:74cf4aafa7bb36d65a6efdc0536fcbf9fa143c3905272ed5237af0bb501d30da",
+      "definition_digest": "sha256:899dea9f8ac5f5468f551ecc14408068f18c6acbf504844d4184ca4f27d898c7",
       "variants": [
         {
           "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu121",
-          "definition_digest": "sha256:7840bf2bb2bb046e9e03bb9fd9775c2af2b4ea23b36d4c8073fcdd6f72f9f6d9",
+          "definition_digest": "sha256:07224e5f08bd63fe6988e61f483b7402780ffad9bdbf2cafe7ad14e49a21245f",
           "build_args": {
-            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:cu121"
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:v1-cu121"
           }
         },
         {
           "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu129",
-          "definition_digest": "sha256:2b5f593049f2e9062556d3fb89e83253a329eabca79dac71bb6542bdc458f488",
+          "definition_digest": "sha256:745f8ed8832460d0451961c85a1793935177c1d36b9f647b1f7b9a7fafd61f9f",
           "build_args": {
-            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:cu129"
+            "LABPOD_BASE_IMAGE": "ghcr.io/labpod/pytorch-jupyter:v1-cu129"
           }
         }
       ]

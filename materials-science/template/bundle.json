@@ -12,7 +12,7 @@
     },
     "published": {
       "ref": "ghcr.io/labpod/labpod-cookbook-materials-science:v1-cpu",
-      "definition_digest": "sha256:0a7b7d5e8d86166d4b23819ba90d8db0c0d041a1d72abcb333c2e8c5b97c6c93"
+      "definition_digest": "sha256:5a49cb319a42734addc1bc7514b2cf8ec882f097f06cab370c863709f965b9a1"
     }
   },
   "defaults": {

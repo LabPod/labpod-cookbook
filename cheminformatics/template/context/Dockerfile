@@ -1,4 +1,4 @@
-ARG LABPOD_BASE_IMAGE=ghcr.io/labpod/scipy-jupyter:py312
+ARG LABPOD_BASE_IMAGE=ghcr.io/labpod/scipy-jupyter:v1-py312
 FROM ${LABPOD_BASE_IMAGE}
 
 RUN apt-get update \

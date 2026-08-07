@@ -4,77 +4,77 @@
       "cookbook": "bioinformatics-alignment",
       "cuda": "cpu",
       "ref": "ghcr.io/labpod/labpod-cookbook-bioinformatics-alignment:v1-cpu",
-      "definition_digest": "sha256:6f51ec749fc8a3fc97936f68b3341bf442cc0866b33726a5e0996cd60078dcf3",
+      "definition_digest": "sha256:347c3d8c1ed470c4e04520418cd3e09a8dd631db2d3417ed2dc99085f4c520ab",
       "build_args": ""
     },
     {
       "cookbook": "cheminformatics",
       "cuda": "cpu",
       "ref": "ghcr.io/labpod/labpod-cookbook-cheminformatics:v1-cpu",
-      "definition_digest": "sha256:602c10023334b9bb2993c99a0160f09bf1f41576ad95d8529fdd345e3beff51c",
+      "definition_digest": "sha256:905b8a649838555b1d17612967c13c205bda8c0b54272b3cce30927593d8e562",
       "build_args": ""
     },
     {
       "cookbook": "huggingface",
       "cuda": "cu121",
       "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu121",
-      "definition_digest": "sha256:7840bf2bb2bb046e9e03bb9fd9775c2af2b4ea23b36d4c8073fcdd6f72f9f6d9",
-      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:cu121"
+      "definition_digest": "sha256:07224e5f08bd63fe6988e61f483b7402780ffad9bdbf2cafe7ad14e49a21245f",
+      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:v1-cu121"
     },
     {
       "cookbook": "huggingface",
       "cuda": "cu126",
       "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu126",
-      "definition_digest": "sha256:74cf4aafa7bb36d65a6efdc0536fcbf9fa143c3905272ed5237af0bb501d30da",
+      "definition_digest": "sha256:899dea9f8ac5f5468f551ecc14408068f18c6acbf504844d4184ca4f27d898c7",
       "build_args": ""
     },
     {
       "cookbook": "huggingface",
       "cuda": "cu129",
       "ref": "ghcr.io/labpod/labpod-cookbook-huggingface:v1-cu129",
-      "definition_digest": "sha256:2b5f593049f2e9062556d3fb89e83253a329eabca79dac71bb6542bdc458f488",
-      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:cu129"
+      "definition_digest": "sha256:745f8ed8832460d0451961c85a1793935177c1d36b9f647b1f7b9a7fafd61f9f",
+      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:v1-cu129"
     },
     {
       "cookbook": "materials-science",
       "cuda": "cpu",
       "ref": "ghcr.io/labpod/labpod-cookbook-materials-science:v1-cpu",
-      "definition_digest": "sha256:0a7b7d5e8d86166d4b23819ba90d8db0c0d041a1d72abcb333c2e8c5b97c6c93",
+      "definition_digest": "sha256:5a49cb319a42734addc1bc7514b2cf8ec882f097f06cab370c863709f965b9a1",
       "build_args": ""
     },
     {
       "cookbook": "pytorch-scientific-ml",
       "cuda": "cu121",
       "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu121",
-      "definition_digest": "sha256:41f63b04435c8c325dab4315a43f3d050df9febb24fbab3a8a933a3855b1cd1f",
-      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:cu121"
+      "definition_digest": "sha256:c2dcf9977cefe091c3a0844d79b70e8bb182fd6c458646a53029cead703c0458",
+      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:v1-cu121"
     },
     {
       "cookbook": "pytorch-scientific-ml",
       "cuda": "cu126",
       "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu126",
-      "definition_digest": "sha256:3fa8a8f56d6f20c32a449f7722ce68aa59df70cfbac63a4b0c0261919dc890ce",
+      "definition_digest": "sha256:ed80b2eca52b43d75d55f5988de9e7f305d1f2ba906bb7c856e39e5e7bdeec1e",
       "build_args": ""
     },
     {
       "cookbook": "pytorch-scientific-ml",
       "cuda": "cu129",
       "ref": "ghcr.io/labpod/labpod-cookbook-pytorch-scientific-ml:v1-cu129",
-      "definition_digest": "sha256:708e2b18bad01206bdb786be84c32daec2a31a0b3a4e5953abb99b63de35a8f6",
-      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:cu129"
+      "definition_digest": "sha256:c22434e92ff8d4d70b39d18f98f6ef6b452273b62138f8f54facb49e9aa3ec83",
+      "build_args": "LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:v1-cu129"
     },
     {
       "cookbook": "quantum-chemistry",
       "cuda": "cpu",
       "ref": "ghcr.io/labpod/labpod-cookbook-quantum-chemistry:v1-cpu",
-      "definition_digest": "sha256:81d658c49303a3b5dfe3e5e9801ac49ecb1c580cc5299a92f122631fd2279a80",
+      "definition_digest": "sha256:d2d8e847fa19b97cf6a9271ad18095384922734ba9bcb699932e4eac120752f0",
       "build_args": ""
     },
     {
       "cookbook": "quantum-computing",
       "cuda": "cpu",
       "ref": "ghcr.io/labpod/labpod-cookbook-quantum-computing:v1-cpu",
-      "definition_digest": "sha256:4b6765525cb719a387df801f14af74aa030deba1450f36cb798bab8a19977759",
+      "definition_digest": "sha256:b2357cfef63b8b042ec975dccd291d58cbf86d3f24423a37b42aa70a4d281922",
       "build_args": ""
     },
     {
@@ -88,7 +88,7 @@
       "cookbook": "seismology",
       "cuda": "cpu",
       "ref": "ghcr.io/labpod/labpod-cookbook-seismology:v1-cpu",
-      "definition_digest": "sha256:f51ed46792eafbc2c409516bffbecba775ea9f6543cb26563c09e3baaf96c374",
+      "definition_digest": "sha256:4816c434dd00422adeceaf01803024cf59f2f66f578874c3e5cc9a783c228520",
       "build_args": ""
     }
   ]

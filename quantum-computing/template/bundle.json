@@ -12,7 +12,7 @@
     },
     "published": {
       "ref": "ghcr.io/labpod/labpod-cookbook-quantum-computing:v1-cpu",
-      "definition_digest": "sha256:4b6765525cb719a387df801f14af74aa030deba1450f36cb798bab8a19977759"
+      "definition_digest": "sha256:b2357cfef63b8b042ec975dccd291d58cbf86d3f24423a37b42aa70a4d281922"
     }
   },
   "defaults": {

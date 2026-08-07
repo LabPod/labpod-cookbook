@@ -12,7 +12,7 @@
     },
     "published": {
       "ref": "ghcr.io/labpod/labpod-cookbook-bioinformatics-alignment:v1-cpu",
-      "definition_digest": "sha256:6f51ec749fc8a3fc97936f68b3341bf442cc0866b33726a5e0996cd60078dcf3"
+      "definition_digest": "sha256:347c3d8c1ed470c4e04520418cd3e09a8dd631db2d3417ed2dc99085f4c520ab"
     }
   },
   "defaults": {

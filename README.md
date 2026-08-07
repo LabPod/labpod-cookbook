@@ -53,17 +53,30 @@ the bundled Dockerfile and context available for inspection, customization, air-
 and a local build after a real change. Pull sizes are approximate compressed transfers and may
 vary slightly with registry metadata.
 
+Each package page lists every published tag alongside the build provenance and SBOM attestations
+the publishing workflow records.
+
 | Bundle | Immutable tag(s) | Approximate pull size |
 |---|---|---|
-| bioinformatics-alignment | `v1-cpu` | 300 MB |
-| cheminformatics | `v1-cpu` | 380 MB |
-| huggingface | `v1-cu121`, `v1-cu126`, `v1-cu129` | 4.8 GB, 5.4 GB, 7.4 GB |
-| materials-science | `v1-cpu` | 300 MB |
-| pytorch-scientific-ml | `v1-cu121`, `v1-cu126`, `v1-cu129` | 5.0 GB, 5.7 GB, 7.7 GB |
-| quantum-chemistry | `v1-cpu` | 430 MB |
-| quantum-computing | `v1-cpu` | 420 MB |
-| r-statistics | `v1-cpu` | 2.8 GB |
-| seismology | `v1-cpu` | 360 MB |
+| [bioinformatics-alignment](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-bioinformatics-alignment) | `v1-cpu` | 300 MB |
+| [cheminformatics](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-cheminformatics) | `v1-cpu` | 380 MB |
+| [huggingface](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-huggingface) | `v1-cu121`, `v1-cu126`, `v1-cu129` | 4.8 GB, 5.4 GB, 7.4 GB |
+| [materials-science](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-materials-science) | `v1-cpu` | 300 MB |
+| [pytorch-scientific-ml](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-pytorch-scientific-ml) | `v1-cu121`, `v1-cu126`, `v1-cu129` | 5.0 GB, 5.7 GB, 7.7 GB |
+| [quantum-chemistry](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-quantum-chemistry) | `v1-cpu` | 430 MB |
+| [quantum-computing](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-quantum-computing) | `v1-cpu` | 420 MB |
+| [r-statistics](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-r-statistics) | `v1-cpu` | 2.8 GB |
+| [seismology](https://github.com/LabPod/labpod-cookbook/pkgs/container/labpod-cookbook-seismology) | `v1-cpu` | 360 MB |
+
+The CUDA bundles publish one tag per CUDA line, and LabPod selects the one your host's NVIDIA
+driver and GPU architecture can actually run — a lab on an older driver gets `v1-cu121` instead
+of a `v1-cu129` image that would not start.
+
+Every bundle builds on a LabPod base image from
+[`LabPod/labpod-images`](https://github.com/LabPod/labpod-images) — `scipy-jupyter` for the CPU
+science stacks, `pytorch-jupyter` for the CUDA ones — pinned to an immutable `v1-*` tag, so a
+local rebuild of an unmodified bundle reproduces the published image instead of drifting with a
+moving base. `r-statistics` pins its upstream `rocker/tidyverse` release directly.
 
 `matlab-deep-learning` intentionally has no published image. Its licensed MathWorks contents
 cannot be redistributed by LabPod, so it remains a local build from the shipped Dockerfile.

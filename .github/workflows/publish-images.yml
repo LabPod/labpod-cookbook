@@ -90,6 +90,32 @@ jobs:
             fi
           done < <(jq -r '.variants[].ref' .github/cookbook-image-matrix.json)
 
+      # GHCR creates a brand-new package private. A private cookbook package
+      # fails no job here but makes every declared bundle ref unpullable for
+      # the researchers importing it, so establish and prove public read on a
+      # throwaway tag before spending the real builds.
+      - name: Publish an access probe for every package
+        run: |
+          set -euo pipefail
+          context=$(mktemp -d)
+          jq -r '.variants[].ref | split(":")[0]' .github/cookbook-image-matrix.json | sort -u | \
+          while read -r repository; do
+            printf 'FROM scratch\nLABEL ai.labpod.image.access-probe=true\n' | \
+              docker buildx build --file - --tag "${repository}:access-${GITHUB_SHA}" --push "$context"
+          done
+
+      - name: Verify every package pulls anonymously
+        run: |
+          set -euo pipefail
+          docker logout ghcr.io
+          jq -r '.variants[].ref | split(":")[0]' .github/cookbook-image-matrix.json | sort -u | \
+          while read -r repository; do
+            if ! docker buildx imagetools inspect "${repository}:access-${GITHUB_SHA}" >/dev/null; then
+              echo "error: $repository is not publicly readable; make the package public before releasing" >&2
+              exit 1
+            fi
+          done
+
   build-pr:
     name: build PR (${{ matrix.cookbook }}:${{ matrix.cuda }})
     if: github.event_name == 'pull_request'
@@ -215,3 +241,14 @@ jobs:
           candidate=$(docker buildx imagetools inspect --raw "$CANDIDATE_REF" | sha256sum | awk '{print $1}')
           release=$(docker buildx imagetools inspect --raw "$RELEASE_REF" | sha256sum | awk '{print $1}')
           [[ -n "$candidate" && "$release" == "$candidate" ]]
+
+      - name: Verify the release tag pulls anonymously
+        env:
+          RELEASE_REF: ${{ matrix.ref }}
+        run: |
+          set -euo pipefail
+          docker logout ghcr.io
+          if ! docker buildx imagetools inspect "$RELEASE_REF" >/dev/null; then
+            echo "error: $RELEASE_REF is published but not publicly readable" >&2
+            exit 1
+          fi

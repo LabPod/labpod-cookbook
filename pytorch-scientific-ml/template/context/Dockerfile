@@ -1,4 +1,4 @@
-ARG LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:cu126
+ARG LABPOD_BASE_IMAGE=ghcr.io/labpod/pytorch-jupyter:v1-cu126
 FROM ${LABPOD_BASE_IMAGE}
 
 COPY requirements.txt /tmp/requirements.txt

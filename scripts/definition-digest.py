@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Compute LabPod's canonical v1 build-input digest for a Docker context."""
+"""Compute LabPod's canonical v1 build-input digest for a Docker context.
+
+This must agree byte-for-byte with LabPod's Go implementation
+(`backend/internal/template/bundle/format.DefinitionDigest`), which is what
+decides whether an imported bundle pulls its published image or builds
+locally. A digest this helper computes differently is not a build failure —
+it silently degrades every import to a local build. `tests/` pins the
+divergence-prone cases (untagged FROM, scratch, stage aliases, ARG after the
+first FROM, nested ARG expansion) against vectors produced by that Go code.
+"""
 
 import argparse
 import hashlib
@@ -11,7 +20,7 @@ from pathlib import Path, PurePosixPath
 
 MAGIC = b"labpod.build-input.v1\0"
 ARG_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-VARIABLE = re.compile(r"\$(?:\{([A-Za-z_][A-Za-z0-9_]*)\}|([A-Za-z_][A-Za-z0-9_]*))")
+VARIABLE = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)")
 
 
 def record(kind, key, value):
@@ -24,16 +33,26 @@ def record(kind, key, value):
 
 
 def logical_lines(contents):
-    pending = ""
-    for raw_line in contents.decode("utf-8").splitlines():
-        line = raw_line.rstrip()
-        if line.endswith("\\"):
-            pending += line[:-1] + " "
+    text = contents.decode("utf-8").replace("\r\n", "\n")
+    lines = []
+    current = ""
+    for raw_line in text.split("\n"):
+        trimmed = raw_line.strip()
+        if not current and (not trimmed or trimmed.startswith("#")):
             continue
-        yield pending + line
-        pending = ""
-    if pending:
-        yield pending
+        continued = trimmed.endswith("\\")
+        part = trimmed[:-1].strip() if continued else trimmed
+        if current and part:
+            current += " "
+        current += part
+        if continued:
+            continue
+        if current.strip():
+            lines.append(current.strip())
+        current = ""
+    if current.strip():
+        lines.append(current.strip())
+    return lines
 
 
 def parse_build_args(values):
@@ -48,66 +67,78 @@ def parse_build_args(values):
     return result
 
 
-def expand(value, arguments):
-    def replacement(match):
-        name = match.group(1) or match.group(2)
-        if name not in arguments:
-            raise ValueError(f"FROM references undefined build argument {name!r}")
-        return arguments[name]
+def expand(raw, arguments):
+    current = raw
+    for _ in range(len(arguments) + 1):
+        missing = []
 
-    return VARIABLE.sub(replacement, value)
+        def replacement(match):
+            name = match.group(1) or match.group(2)
+            value = arguments.get(name, "")
+            if not value:
+                missing.append(name)
+                return match.group(0)
+            return value
+
+        following = VARIABLE.sub(replacement, current)
+        if missing:
+            raise ValueError(f"unresolved FROM ARG {missing[0]}")
+        if following == current:
+            match = VARIABLE.search(following)
+            if match:
+                raise ValueError(f"cyclic FROM ARG {match.group(1) or match.group(2)}")
+            return following
+        current = following
+    raise ValueError("cyclic FROM ARG expansion")
 
 
 def normalize_reference(reference):
-    reference = reference.strip()
-    if not reference:
-        raise ValueError("empty FROM image reference")
-    first, separator, remainder = reference.partition("/")
+    if reference.lower() == "scratch":
+        return "scratch"
+    first, separator, _ = reference.partition("/")
     if not separator:
-        reference = "docker.io/library/" + reference
-    elif "." not in first and ":" not in first and first != "localhost":
-        reference = "docker.io/" + reference
-    elif first == "index.docker.io":
-        reference = "docker.io/" + remainder
-    return reference
+        normalized = "docker.io/library/" + reference
+    elif "." in first or ":" in first or first == "localhost":
+        normalized = reference
+    else:
+        normalized = "docker.io/" + reference
+    if "@" in normalized:
+        return normalized
+    if normalized.rfind(":") <= normalized.rfind("/"):
+        normalized += ":latest"
+    return normalized
 
 
 def external_base_images(dockerfile, explicit_build_args):
     arguments = {}
     aliases = set()
     images = []
+    seen_from = False
     for line in logical_lines(dockerfile):
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
+        fields = line.split()
+        if not fields:
             continue
-        instruction, separator, rest = stripped.partition(" ")
-        if not separator:
-            continue
-        instruction = instruction.upper()
-        rest = rest.strip()
+        instruction = fields[0].upper()
         if instruction == "ARG":
-            declaration = rest.split()[0]
-            name, has_default, default = declaration.partition("=")
-            if not ARG_NAME.fullmatch(name):
-                raise ValueError(f"invalid ARG name {name!r}")
-            if name in explicit_build_args:
-                arguments[name] = explicit_build_args[name]
-            elif has_default:
-                arguments[name] = default
+            if seen_from or len(fields) < 2:
+                continue
+            name, _, default = fields[1].partition("=")
+            arguments[name] = explicit_build_args.get(name, default)
             continue
         if instruction != "FROM":
             continue
 
-        fields = rest.split()
-        while fields and fields[0].startswith("--"):
-            fields.pop(0)
-        if not fields:
-            raise ValueError("FROM is missing its image reference")
-        source = expand(fields[0], arguments)
+        seen_from = True
+        rest = fields[1:]
+        while rest and rest[0].startswith("--"):
+            rest.pop(0)
+        if not rest:
+            raise ValueError("malformed FROM instruction")
+        source = expand(rest[0], arguments)
         if source.lower() not in aliases:
             images.append(normalize_reference(source))
-        if len(fields) >= 3 and fields[-2].upper() == "AS":
-            aliases.add(fields[-1].lower())
+        if len(rest) >= 3 and rest[1].upper() == "AS":
+            aliases.add(rest[2].lower())
     if not images:
         raise ValueError("Dockerfile has no external FROM image")
     return images

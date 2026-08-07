@@ -12,7 +12,7 @@
     },
     "published": {
       "ref": "ghcr.io/labpod/labpod-cookbook-seismology:v1-cpu",
-      "definition_digest": "sha256:f51ed46792eafbc2c409516bffbecba775ea9f6543cb26563c09e3baaf96c374"
+      "definition_digest": "sha256:4816c434dd00422adeceaf01803024cf59f2f66f578874c3e5cc9a783c228520"
     }
   },
   "defaults": {
