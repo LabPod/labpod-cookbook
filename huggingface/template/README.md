@@ -1,6 +1,6 @@
 # Hugging Face Basics (Cookbook)
 
-Builds from LabPod's `ghcr.io/labpod/pytorch-jupyter:cu126` composite image (the same base as
+Builds from LabPod's `ghcr.io/labpod/pytorch-jupyter:v1-cu126` composite image (the same base as
 the `pytorch-scientific-ml` cookbook) plus `transformers` and `accelerate` - see
 `context/requirements.txt`. The base provides Python 3.12, PyTorch, JupyterLab, TensorBoard,
 and code-server without baking a container user. The bundle prepares the unchanged definition

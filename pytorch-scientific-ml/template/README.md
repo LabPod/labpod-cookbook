@@ -1,6 +1,6 @@
 # PyTorch Scientific ML (Cookbook)
 
-Builds from LabPod's `ghcr.io/labpod/pytorch-jupyter:cu126` composite image (the default base
+Builds from LabPod's `ghcr.io/labpod/pytorch-jupyter:v1-cu126` composite image (the default base
 for LabPod's built-in "PyTorch JupyterLab" template), which already provides Python 3.12,
 PyTorch, JupyterLab, TensorBoard, and code-server without baking a container user. This
 cookbook's derived layer adds MLflow - see `context/requirements.txt`. The bundle prepares the

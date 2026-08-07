@@ -1,6 +1,6 @@
 # Seismology (Cookbook)
 
-Builds from LabPod's CPU-only `ghcr.io/labpod/scipy-jupyter:py312` composite image plus `obspy`
+Builds from LabPod's CPU-only `ghcr.io/labpod/scipy-jupyter:v1-py312` composite image plus `obspy`
 - see `context/requirements.txt`. The base provides Python 3.12, JupyterLab, and the common
 scientific Python stack without baking a container user. The bundle prepares the unchanged
 definition by pulling the immutable prebuilt image; its **approximate pull size is 360 MB**.

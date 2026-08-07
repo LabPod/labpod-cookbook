@@ -3,7 +3,7 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-seismology",
   "name": "Seismology (Cookbook)",
-  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:py312; no CUDA needed) plus obspy, built from this template's Dockerfile. Real seismic waveform processing - filtering, basic feature extraction. See github.com/LabPod/labpod-cookbook/tree/main/seismology.",
+  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus obspy, built from this template's Dockerfile. Real seismic waveform processing - filtering, basic feature extraction. See github.com/LabPod/labpod-cookbook/tree/main/seismology.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/seismology:latest",

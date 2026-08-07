@@ -3,7 +3,7 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-cheminformatics",
   "name": "Cheminformatics (Cookbook)",
-  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:py312; no CUDA needed) plus rdkit, built from this template's Dockerfile. Molecule parsing, descriptors, and similarity search. See github.com/LabPod/labpod-cookbook/tree/main/cheminformatics.",
+  "description": "CPU-only JupyterLab on the LabPod SciPy composite image (ghcr.io/labpod/scipy-jupyter:v1-py312; no CUDA needed) plus rdkit, built from this template's Dockerfile. Molecule parsing, descriptors, and similarity search. See github.com/LabPod/labpod-cookbook/tree/main/cheminformatics.",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/cheminformatics:latest",

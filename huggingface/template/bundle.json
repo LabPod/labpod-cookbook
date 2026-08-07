@@ -3,7 +3,7 @@
   "kind": "labpod.template.bundle",
   "id_hint": "cookbook-huggingface",
   "name": "Hugging Face Basics (Cookbook)",
-  "description": "PyTorch JupyterLab on the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:cu126) plus transformers + accelerate (see context/requirements.txt), built from this template's Dockerfile. Unlike the other labpod-cookbook environments, notebooks here download pretrained model weights from the Hugging Face Hub at runtime, so the workspace needs internet access the first time each model is used (weights cache under HF_HOME, which LabPod redirects to /work/.hf-cache, so they persist across stop/start).",
+  "description": "PyTorch JupyterLab on the LabPod PyTorch composite image (ghcr.io/labpod/pytorch-jupyter:v1-cu126) plus transformers + accelerate (see context/requirements.txt), built from this template's Dockerfile. Unlike the other labpod-cookbook environments, notebooks here download pretrained model weights from the Hugging Face Hub at runtime, so the workspace needs internet access the first time each model is used (weights cache under HF_HOME, which LabPod redirects to /work/.hf-cache, so they persist across stop/start).",
   "type": "jupyter",
   "image": {
     "ref": "localhost/labpod-cookbook/huggingface:latest",
