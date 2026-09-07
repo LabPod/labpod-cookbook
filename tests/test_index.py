@@ -36,7 +36,7 @@ class TestIndexIsRegenerable(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_declares_its_schema(self):
-        self.assertEqual(INDEX["schema_version"], "1")
+        self.assertEqual(INDEX["schema_version"], "2")
         self.assertEqual(INDEX["kind"], "labpod.cookbook.index")
 
 
@@ -120,23 +120,29 @@ class TestEntriesAgreeWithTheirBundle(unittest.TestCase):
             "no bundle expects a GPU — the fields are probably reading through their default",
         )
 
-    # A licence-gated bundle cannot be enabled until its terms are accepted.
-    # Omitting that sends the researcher through an image build first.
-    def test_eula_gate_and_terms_url_match_the_bundle(self):
+    def test_current_bundle_schema_and_terms_url_match_the_index(self):
         for cookbook_dir in BUNDLE_DIRS:
             bundle = json.loads((cookbook_dir / "template" / "bundle.json").read_text())
             item = entry(cookbook_dir.name)
-            self.assertEqual(
-                item["requires_eula"], bool(bundle.get("requires_eula", False)), cookbook_dir.name
-            )
+            self.assertEqual(bundle["schema_version"], "2", cookbook_dir.name)
+            self.assertNotIn("requires_eula", bundle, cookbook_dir.name)
+            self.assertNotIn("requires_eula", item, cookbook_dir.name)
             self.assertEqual(
                 item.get("terms_url", ""), bundle.get("terms_url", ""), cookbook_dir.name
             )
 
-    def test_the_licence_gated_bundle_is_flagged(self):
+    def test_matlab_exposes_its_terms_as_information(self):
         matlab = entry("matlab-deep-learning")
-        self.assertTrue(matlab["requires_eula"])
         self.assertTrue(matlab.get("terms_url", "").startswith("https://"))
+
+    # Pull-only bundles cannot be prepared from an administrator-owned image
+    # catalogue. Their bundled README is what an importer receives, so it
+    # must direct the template owner to the owner-scoped download surface.
+    def test_pull_only_bundle_readmes_direct_users_to_my_images(self):
+        for cookbook in ("gromacs-md", "openfoam-cfd"):
+            readme = (REPO_ROOT / cookbook / "template" / "README.md").read_text()
+            self.assertIn("My images", readme, cookbook)
+            self.assertNotIn("LabPod's Images page", readme, cookbook)
 
 
 class TestBundleArtifactIsTrustworthy(unittest.TestCase):

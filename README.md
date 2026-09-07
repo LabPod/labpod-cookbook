@@ -84,13 +84,19 @@ cannot be redistributed by LabPod, so it remains a local build from the shipped 
 ## Machine-readable index
 
 [`index.json`](index.json) lists every bundle in this repo — name, description, the image ref a
-researcher actually receives, whether it pulls or needs a build, whether enabling it requires
-accepting a licence (`requires_eula` / `terms_url`), GPU expectation, launcher ports, and each
-tar's URL, byte size, and SHA-256.
+researcher actually receives, whether it pulls or needs a build, optional informational source
+terms (`terms_url`), GPU expectation, launcher ports, and each tar's URL, byte size, and SHA-256.
+The index and every bundle manifest use schema version 2; version 1 bundles are not compatible
+with current LabPod releases.
+
+Terms links do not grant third-party rights or record acceptance. Researchers and their
+institutions remain responsible for vendor terms, registry authentication, and any required
+software licenses.
 
 `image` is the ref a researcher actually gets: the pinned published image when the bundle has
-one, otherwise the bundle's own ref (a `localhost/…` ref means an administrator must build it,
-which `requires_build` also flags). `image_variants` lists **only the alternates** — the default
+one, otherwise the bundle's own ref (a `localhost/…` ref requires the template owner to build it
+in their own image store, which `requires_build` also flags). `image_variants` lists **only the
+alternates** — the default
 is already in `image`, so the full set to offer is `[image] + image_variants`.
 
 It exists so LabPod's template gallery can show this repo as its **Cookbook templates** section.
@@ -123,10 +129,10 @@ given client verifies it is that client's decision.
    - Published Dockerfile bundles: leave preparation enabled. LabPod pulls the immutable
      published image when the definition digest matches. If you edit the context, or if a pull
      is unavailable on an air-gapped host, use the bundled Dockerfile to build the unchanged
-     local fallback ref under `localhost/labpod-cookbook/`.
+     local fallback ref under `localhost/labpod-cookbook/` in your own image store.
    - MATLAB: build locally because LabPod cannot redistribute the licensed image contents.
    - Pull-only bundles (`gromacs-md`, `openfoam-cfd`): there is no Dockerfile to build. Pull the
-     image ref shown in the template from **Images** first, then enable the template.
+     image ref shown in the template from **My images** first, then enable the template.
 3. **Enable it**, then create a workspace from the template.
 4. **Get the notebook(s).** Open the LabPod Terminal (or a Jupyter terminal) inside the
    workspace and clone this repo into `/work`, which persists across stop/start:

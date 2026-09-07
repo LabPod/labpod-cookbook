@@ -8,13 +8,14 @@ Unlike the other cookbooks in this repo, **this one has no `template/` bundle of
 it uses LabPod's existing built-in template, **"Parallel Programming (CUDA/MPI/OpenMP)"**
 (`tmpl-parallel-dev`), which already ships GCC/gfortran/clang, OpenMP, OpenMPI, the CUDA
 toolkit, and Nsight profilers, served through VS Code for the Web. That template is opt-in
-(admin builds it, EULA acknowledgement required for the CUDA toolkit) - ask your admin to
-enable it if it isn't available yet.
+(the global catalogue is administrator-curated), but it pulls its published image into each
+researcher's own image store. No administrator build or LabPod EULA acknowledgement is required;
+ask your admin to enable the template if it is not available yet.
 
 ## How to use this cookbook
 
-1. Ask your admin to build and enable the **Parallel Programming (CUDA/MPI/OpenMP)** template
-   if it isn't already (`/admin/templates`).
+1. Ask your admin to enable the **Parallel Programming (CUDA/MPI/OpenMP)** template if it is not
+   already available (`/admin/templates`).
 2. Create a workspace from that template and open it - it's VS Code for the Web, not
    JupyterLab.
 3. Open a terminal and clone this repo into `/work`, which persists across stop/start:
