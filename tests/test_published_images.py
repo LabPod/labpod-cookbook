@@ -194,6 +194,14 @@ class ShippedBundleTarTest(unittest.TestCase):
                         source[path.relative_to(template).as_posix()] = path.read_bytes()
                 self.assertEqual(bundled, source)
 
+    def test_every_tar_carries_a_v2_manifest_without_the_retired_eula_gate(self):
+        for cookbook in bundle_directories():
+            with self.subTest(cookbook=cookbook.name):
+                bundled = self.bundled_files(cookbook.name)
+                manifest = json.loads(bundled["bundle.json"])
+                self.assertEqual(manifest["schema_version"], "2")
+                self.assertNotIn("requires_eula", manifest)
+
 
 class BaseImagePinningTest(unittest.TestCase):
     IMMUTABLE_LABPOD_BASE = re.compile(r"^ghcr\.io/labpod/[a-z0-9-]+:v[0-9]+-[a-z0-9.]+$")

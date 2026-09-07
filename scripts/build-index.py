@@ -28,7 +28,8 @@ INDEX_PATH = REPO_ROOT / "index.json"
 RAW_BASE = "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main"
 REPO_BASE = "https://github.com/LabPod/labpod-cookbook/tree/main"
 
-SCHEMA_VERSION = "1"
+SCHEMA_VERSION = "2"
+BUNDLE_SCHEMA_VERSION = "2"
 
 
 def bundle_dirs():
@@ -38,6 +39,15 @@ def bundle_dirs():
 def entry_for(cookbook_dir):
     cookbook = cookbook_dir.name
     bundle = json.loads((cookbook_dir / "template" / "bundle.json").read_text(encoding="utf-8"))
+    if bundle.get("schema_version") != BUNDLE_SCHEMA_VERSION:
+        raise SystemExit(
+            f"error: {cookbook}/template/bundle.json must use schema_version "
+            f"{BUNDLE_SCHEMA_VERSION!r}"
+        )
+    if "requires_eula" in bundle:
+        raise SystemExit(
+            f"error: {cookbook}/template/bundle.json contains retired requires_eula metadata"
+        )
     image = bundle.get("image") or {}
     published = image.get("published") or {}
     defaults = bundle.get("defaults") or {}
@@ -70,10 +80,6 @@ def entry_for(cookbook_dir):
         "image": effective_ref,
         "published": bool(published),
         "requires_build": effective_ref.startswith("localhost/"),
-        # A licence-gated bundle cannot be enabled until its terms are
-        # accepted, so a card that omits this sends the researcher through an
-        # image build before they discover they may not be entitled to accept.
-        "requires_eula": bool(bundle.get("requires_eula", False)),
         "gpu_required": bool(defaults.get("gpu_required", False)),
         "gpu_default": bool(defaults.get("gpu_default", False)),
         "ports": [p.get("name", "") for p in (bundle.get("ports") or [])],
