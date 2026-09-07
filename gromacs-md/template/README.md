@@ -2,7 +2,7 @@
 
 Uses the official `gromacs/gromacs` image (CUDA-enabled build - works fine without a GPU too,
 just slower), no custom Dockerfile. After importing this bundle, pull
-`docker.io/gromacs/gromacs:gmx-2022.2-cuda-11.6.0-avx` from LabPod's Images page, then enable
+`docker.io/gromacs/gromacs:gmx-2022.2-cuda-11.6.0-avx` from **My images**, then enable
 the template. Terminal-only, like `openfoam-cfd/` - you run `gmx` commands directly through
 LabPod's Terminal, there's no web app here.
 

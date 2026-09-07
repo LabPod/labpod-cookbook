@@ -135,6 +135,15 @@ class TestEntriesAgreeWithTheirBundle(unittest.TestCase):
         matlab = entry("matlab-deep-learning")
         self.assertTrue(matlab.get("terms_url", "").startswith("https://"))
 
+    # Pull-only bundles cannot be prepared from an administrator-owned image
+    # catalogue. Their bundled README is what an importer receives, so it
+    # must direct the template owner to the owner-scoped download surface.
+    def test_pull_only_bundle_readmes_direct_users_to_my_images(self):
+        for cookbook in ("gromacs-md", "openfoam-cfd"):
+            readme = (REPO_ROOT / cookbook / "template" / "README.md").read_text()
+            self.assertIn("My images", readme, cookbook)
+            self.assertNotIn("LabPod's Images page", readme, cookbook)
+
 
 class TestBundleArtifactIsTrustworthy(unittest.TestCase):
     # The browser fetches bundle_url and hands the bytes to LabPod's importer.

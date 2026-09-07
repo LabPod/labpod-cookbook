@@ -1,7 +1,7 @@
 # OpenFOAM CFD (Cookbook)
 
 Uses the official OpenCFD image (`docker.io/opencfd/openfoam-default:2512`), no custom
-Dockerfile. After importing this bundle, pull that image from LabPod's Images page, then enable
+Dockerfile. After importing this bundle, pull that image from **My images**, then enable
 the template. This is a **terminal-only** template - 0 HTTP ports, no JupyterLab or code-server.
 You work through LabPod's built-in Terminal, running OpenFOAM's own command-line solvers
 directly.

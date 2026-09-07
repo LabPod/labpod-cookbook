@@ -69,7 +69,8 @@ def entry_for(cookbook_dir):
 
     # The ref a researcher actually receives. A published bundle pulls its
     # pinned image; everything else resolves to the bundle's own ref, which
-    # for a `localhost/` entry means an administrator has to build it.
+    # for a `localhost/` entry means the template owner has to build it in
+    # their own image store.
     effective_ref = published.get("ref") or image.get("ref", "")
 
     entry = {

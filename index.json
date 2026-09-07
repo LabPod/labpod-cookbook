@@ -51,7 +51,7 @@
       "ports": [],
       "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/gromacs-md.labpod-bundle.tar",
       "bundle_bytes": 10240,
-      "bundle_sha256": "sha256:9733e560dfdf4f365c20f5fe8f55fb4198652cc10d100b5f94805a2f921bac34",
+      "bundle_sha256": "sha256:90fbc31ad959784f6094551d310c17335d44f1f8413918a1364eb3bd18d4a259",
       "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/gromacs-md"
     },
     {
@@ -126,7 +126,7 @@
       "ports": [],
       "bundle_url": "https://raw.githubusercontent.com/LabPod/labpod-cookbook/main/dist/openfoam-cfd.labpod-bundle.tar",
       "bundle_bytes": 10240,
-      "bundle_sha256": "sha256:45422b48cf83554cde0e32028c6d1a3133f942df2c0093e43a75e26def56ea7d",
+      "bundle_sha256": "sha256:4df26de48ead2c982c08af762266e5b39dde8c5504c056d205ca80aaa78728b6",
       "docs_url": "https://github.com/LabPod/labpod-cookbook/tree/main/openfoam-cfd"
     },
     {
