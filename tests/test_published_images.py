@@ -153,6 +153,25 @@ class DefinitionDigestTest(unittest.TestCase):
                     target.write_text(contents)
                 self.assertEqual(self.digest(context, vector["build_args"]), vector["digest"])
 
+    def test_malformed_heredoc_instructions_do_not_produce_a_digest(self):
+        for instruction, error in (
+            ("RUN <<-EOF\n EOF\n", "unterminated Dockerfile heredoc"),
+            ("RUN <<''\n", "unterminated Dockerfile heredoc"),
+            ("RUN <<'EOF\n", "unterminated quote"),
+            ("RUN <<EOF \\\n", "dangling line continuation"),
+        ):
+            with self.subTest(instruction=instruction), tempfile.TemporaryDirectory() as temporary:
+                context = Path(temporary)
+                (context / "Dockerfile").write_text("FROM scratch\n" + instruction)
+                result = subprocess.run(
+                    [ROOT / "scripts/definition-digest.py", "--context", context],
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(result.returncode, 2)
+                self.assertIn(error, result.stderr)
+                self.assertEqual(result.stdout, "")
+
     def test_every_shipped_context_reproduces_its_declared_digest(self):
         matrix = json.loads((ROOT / ".github/cookbook-image-matrix.json").read_text())
         for variant in matrix["variants"]:
