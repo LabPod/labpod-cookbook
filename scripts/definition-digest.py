@@ -173,11 +173,10 @@ def expand(raw, arguments):
 
         def replacement(match):
             name = match.group(1) or match.group(2)
-            value = arguments.get(name, "")
-            if not value:
+            if name not in arguments:
                 missing.append(name)
                 return match.group(0)
-            return value
+            return arguments[name]
 
         following = VARIABLE.sub(replacement, current)
         if missing:
