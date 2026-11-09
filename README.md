@@ -53,6 +53,13 @@ the bundled Dockerfile and context available for inspection, customization, air-
 and a local build after a real change. Pull sizes are approximate compressed transfers and may
 vary slightly with registry metadata.
 
+When publishing a custom bundle, use `scripts/definition-digest.py` to compute
+its definition digest. Heredoc bodies remain part of the exact Dockerfile
+bytes, but `FROM` lines inside them are not external bases. If an older helper
+recorded such a line as a base, recompute the bundle's publication metadata,
+rebuild its tar and index, then re-import it and prepare the workspace image
+again. Existing cookbook publication digests are unchanged.
+
 Each package page lists every published tag alongside the build provenance and SBOM attestations
 the publishing workflow records.
 
