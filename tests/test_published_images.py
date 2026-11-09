@@ -156,6 +156,7 @@ class DefinitionDigestTest(unittest.TestCase):
     def test_malformed_heredoc_instructions_do_not_produce_a_digest(self):
         for instruction, error in (
             ("RUN <<-EOF\n EOF\n", "unterminated Dockerfile heredoc"),
+            ("RUN <<''\n", "unterminated Dockerfile heredoc"),
             ("RUN <<'EOF\n", "unterminated quote"),
             ("RUN <<EOF \\\n", "dangling line continuation"),
         ):

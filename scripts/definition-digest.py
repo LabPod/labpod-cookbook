@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """Compute LabPod's canonical v1 build-input digest for a Docker context.
 
-This must agree byte-for-byte with LabPod's Go implementation
-(`backend/internal/template/bundle/format.DefinitionDigest`), which is what
-decides whether an imported bundle pulls its published image or builds
-locally. A digest this helper computes differently is not a build failure —
+This must agree byte-for-byte with LabPod's definition digest, which decides
+whether an imported bundle pulls its published image or builds locally. A digest this helper computes differently is not a build failure —
 it silently degrades every import to a local build. `tests/` pins the
 divergence-prone cases (untagged FROM, scratch, stage aliases, ARG after the
 first FROM, nested ARG expansion) against vectors produced by that Go code.
@@ -115,7 +113,7 @@ def dockerfile_heredocs(line):
 
 def logical_lines(contents):
     text = contents.decode("utf-8")
-    physical = iter(text.replace("\r\n", "\n").split("\n"))
+    physical = iter(text.replace("\r\n", "\n").removesuffix("\n").split("\n"))
     current = ""
     escape = "\\"
     continued = False
