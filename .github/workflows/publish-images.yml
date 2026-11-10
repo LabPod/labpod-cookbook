@@ -96,7 +96,8 @@ jobs:
           while read -r variant; do
             ref=$(jq -r '.ref' <<<"$variant")
             expected=$(jq -r '.definition_digest' <<<"$variant")
-            if docker buildx imagetools inspect "$ref" >/dev/null 2>&1; then
+            # Only Buildx's reference-specific manifest-not-found error proves absence.
+            if inspection=$(docker buildx imagetools inspect "$ref" 2>&1); then
               labels=$(docker buildx imagetools inspect "$ref" --format '{{json .Image.Config.Labels}}')
               if [[ "$(jq -r '."ai.labpod.image.build-input-digest"' <<<"$labels")" != "$expected" ]]; then
                 echo "error: immutable release tag already exists with a different definition digest: $ref" >&2
@@ -104,6 +105,9 @@ jobs:
               fi
               echo "Already published: $ref"
               continue
+            elif [[ "$inspection" != "ERROR: $ref: not found" ]]; then
+              printf '%s\n' "$inspection" >&2
+              exit 1
             fi
             unpublished=$(jq -c --argjson variant "$variant" '. + [$variant]' <<<"$unpublished")
           done < <(jq -c '.variants[]' .github/cookbook-image-matrix.json)
@@ -259,8 +263,12 @@ jobs:
           RELEASE_REF: ${{ matrix.ref }}
         run: |
           set -euo pipefail
-          if docker buildx imagetools inspect "$RELEASE_REF" >/dev/null 2>&1; then
+          # Only Buildx's reference-specific manifest-not-found error proves absence.
+          if inspection=$(docker buildx imagetools inspect "$RELEASE_REF" 2>&1); then
             echo "error: immutable release tag already exists: $RELEASE_REF" >&2
+            exit 1
+          elif [[ "$inspection" != "ERROR: $RELEASE_REF: not found" ]]; then
+            printf '%s\n' "$inspection" >&2
             exit 1
           fi
           docker buildx imagetools create --tag "$RELEASE_REF" "$CANDIDATE_REF"
