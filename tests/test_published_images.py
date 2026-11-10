@@ -58,6 +58,14 @@ class PublishedBundleMetadataTest(unittest.TestCase):
 
 
 class PublishingWorkflowTest(unittest.TestCase):
+    INSPECTION_ERRORS = (
+        "ERROR: unexpected status from HEAD request: 503 Service Unavailable",
+        "ERROR: failed to authorize: 401 Unauthorized",
+        "ERROR: failed to do request: dial tcp: connection refused",
+        "ERROR: unexpected status from HEAD request: 429 Too Many Requests",
+        "ERROR: httpReadSeeker: failed open: referenced content not found: not found",
+    )
+
     def setUp(self):
         self.matrix = json.loads((ROOT / ".github/cookbook-image-matrix.json").read_text())
         self.workflow = (ROOT / ".github/workflows/publish-images.yml").read_text()
@@ -129,7 +137,14 @@ class PublishingWorkflowTest(unittest.TestCase):
         mock_docker = """
 docker() {
   [[ "$1 $2 $3" == 'buildx imagetools inspect' ]] || return 2
-  jq -e --arg ref "$4" 'has($ref)' <<<"$PUBLISHED" >/dev/null || return 1
+  if [[ "$4" == "$ERROR_REF" && -n "$INSPECT_ERROR" ]]; then
+    echo "$INSPECT_ERROR" >&2
+    return 1
+  fi
+  if ! jq -e --arg ref "$4" 'has($ref)' <<<"$PUBLISHED" >/dev/null; then
+    echo "ERROR: $4: not found" >&2
+    return 1
+  fi
   if (( $# > 4 )); then
     [[ "$5 $6" == '--format {{json .Image.Config.Labels}}' ]] || return 2
     jq -c --arg ref "$4" '.[$ref]' <<<"$PUBLISHED"
@@ -141,27 +156,35 @@ docker() {
         published = {variant["ref"]: {label: variant["definition_digest"]} for variant in variants}
         unpublished = [variants[0], variants[3], variants[4]]
         mixed = {ref: labels for ref, labels in published.items() if ref not in {v["ref"] for v in unpublished}}
-        for name, existing, expected in (
-            ("all published", published, []),
-            ("mixed", mixed, unpublished),
-            ("all unpublished", {}, variants),
-            ("digest mismatch", {**published, variants[0]["ref"]: {label: "sha256:" + "0" * 64}}, None),
-            ("missing label", {**published, variants[0]["ref"]: {}}, None),
-            ("null labels", {**published, variants[0]["ref"]: None}, None),
-        ):
+        cases = [
+            ("all published", published, [], ""),
+            ("mixed", mixed, unpublished, ""),
+            ("all unpublished", {}, variants, ""),
+            ("digest mismatch", {**published, variants[0]["ref"]: {label: "sha256:" + "0" * 64}}, None, ""),
+            ("missing label", {**published, variants[0]["ref"]: {}}, None, ""),
+            ("null labels", {**published, variants[0]["ref"]: None}, None, ""),
+        ]
+        cases += [(error, mixed, None, error) for error in self.INSPECTION_ERRORS]
+        for name, existing, expected, inspection_error in cases:
             with self.subTest(case=name), tempfile.TemporaryDirectory() as temporary:
                 output = Path(temporary) / "output"
                 output.touch()
                 result = subprocess.run(
                     ["bash", "-c", mock_docker + script],
                     cwd=ROOT,
-                    env={**os.environ, "PUBLISHED": json.dumps(existing), "GITHUB_OUTPUT": str(output)},
+                    env={
+                        **os.environ,
+                        "PUBLISHED": json.dumps(existing),
+                        "GITHUB_OUTPUT": str(output),
+                        "ERROR_REF": variants[1]["ref"],
+                        "INSPECT_ERROR": inspection_error,
+                    },
                     capture_output=True,
                     text=True,
                 )
                 if expected is None:
                     self.assertNotEqual(result.returncode, 0)
-                    self.assertIn("immutable release tag", result.stderr)
+                    self.assertIn(inspection_error or "immutable release tag", result.stderr)
                     self.assertEqual(output.read_text(), "")
                 else:
                     self.assertEqual(result.returncode, 0, result.stderr)
@@ -170,6 +193,59 @@ docker() {
                     self.assertIn("has_unpublished", outputs)
                     self.assertEqual(json.loads(outputs["matrix"]), {"include": expected})
                     self.assertEqual(outputs["has_unpublished"], str(bool(expected)).lower())
+
+    def test_promotion_only_creates_a_confirmed_missing_tag(self):
+        guard = self.workflow.split("      - name: Promote the validated candidate once\n", 1)[1]
+        script = textwrap.dedent(re.search(r"        run: \|\n((?:          .*\n|\n)+)", guard)[1])
+        # Synthetic manifests make an accidental overwrite observable without a registry.
+        mock_docker = """
+docker() {
+  case "$*" in
+    "buildx imagetools inspect $RELEASE_REF")
+      if [[ -n "$INSPECT_ERROR" ]]; then
+        echo "$INSPECT_ERROR" >&2
+        return 1
+      fi
+      [[ -f "$RELEASE" ]] && return 0
+      echo "ERROR: $RELEASE_REF: not found" >&2
+      return 1 ;;
+    "buildx imagetools create --tag $RELEASE_REF $CANDIDATE_REF")
+      cp "$CANDIDATE" "$RELEASE" ;;
+    "buildx imagetools inspect --raw $CANDIDATE_REF") cat "$CANDIDATE" ;;
+    "buildx imagetools inspect --raw $RELEASE_REF") cat "$RELEASE" ;;
+    *) return 2 ;;
+  esac
+}
+"""
+        cases = [("missing", False, ""), ("existing", True, "")]
+        cases += [(error, True, error) for error in self.INSPECTION_ERRORS]
+        for name, exists, inspection_error in cases:
+            with self.subTest(case=name), tempfile.TemporaryDirectory() as temporary:
+                release = Path(temporary) / "release"
+                candidate = Path(temporary) / "candidate"
+                candidate.write_text("new-manifest")
+                if exists:
+                    release.write_text("old-manifest")
+                result = subprocess.run(
+                    ["bash", "-c", mock_docker + script],
+                    env={
+                        **os.environ,
+                        "RELEASE_REF": "ghcr.io/example/cookbook:v1-cpu",
+                        "CANDIDATE_REF": "ghcr.io/example/cookbook:v1-cpu-candidate-test",
+                        "RELEASE": str(release),
+                        "CANDIDATE": str(candidate),
+                        "INSPECT_ERROR": inspection_error,
+                    },
+                    capture_output=True,
+                    text=True,
+                )
+                if exists:
+                    self.assertEqual(release.read_text(), "old-manifest")
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn(inspection_error or "immutable release tag", result.stderr)
+                else:
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(release.read_text(), candidate.read_text())
 
     def test_release_jobs_and_access_probes_use_only_the_unpublished_matrix(self):
         preflight = self.workflow.split("  preflight:\n", 1)[1].split("  build-pr:\n", 1)[0]
