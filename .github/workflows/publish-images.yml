@@ -72,6 +72,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      matrix: ${{ steps.unpublished.outputs.matrix }}
+      has_unpublished: ${{ steps.unpublished.outputs.has_unpublished }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -86,34 +89,52 @@ jobs:
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
       - name: Refuse to overwrite immutable release tags
+        id: unpublished
         run: |
           set -euo pipefail
-          while read -r ref; do
+          unpublished='[]'
+          while read -r variant; do
+            ref=$(jq -r '.ref' <<<"$variant")
+            expected=$(jq -r '.definition_digest' <<<"$variant")
             if docker buildx imagetools inspect "$ref" >/dev/null 2>&1; then
-              echo "error: immutable release tag already exists: $ref" >&2
-              exit 1
+              labels=$(docker buildx imagetools inspect "$ref" --format '{{json .Image.Config.Labels}}')
+              if [[ "$(jq -r '."ai.labpod.image.build-input-digest"' <<<"$labels")" != "$expected" ]]; then
+                echo "error: immutable release tag already exists with a different definition digest: $ref" >&2
+                exit 1
+              fi
+              echo "Already published: $ref"
+              continue
             fi
-          done < <(jq -r '.variants[].ref' .github/cookbook-image-matrix.json)
+            unpublished=$(jq -c --argjson variant "$variant" '. + [$variant]' <<<"$unpublished")
+          done < <(jq -c '.variants[]' .github/cookbook-image-matrix.json)
+          echo "matrix=$(jq -c '{include: .}' <<<"$unpublished")" >>"$GITHUB_OUTPUT"
+          echo "has_unpublished=$(jq 'length > 0' <<<"$unpublished")" >>"$GITHUB_OUTPUT"
 
       # GHCR creates a brand-new package private. A private cookbook package
       # fails no job here but makes every declared bundle ref unpullable for
       # the researchers importing it, so establish and prove public read on a
       # throwaway tag before spending the real builds.
       - name: Publish an access probe for every package
+        if: steps.unpublished.outputs.has_unpublished == 'true'
+        env:
+          PUBLISH_MATRIX: ${{ steps.unpublished.outputs.matrix }}
         run: |
           set -euo pipefail
           context=$(mktemp -d)
-          jq -r '.variants[].ref | split(":")[0]' .github/cookbook-image-matrix.json | sort -u | \
+          jq -r '.include[].ref | split(":")[0]' <<<"$PUBLISH_MATRIX" | sort -u | \
           while read -r repository; do
             printf 'FROM scratch\nLABEL ai.labpod.image.access-probe=true\n' | \
               docker buildx build --file - --tag "${repository}:access-${GITHUB_SHA}" --push "$context"
           done
 
       - name: Verify every package pulls anonymously
+        if: steps.unpublished.outputs.has_unpublished == 'true'
+        env:
+          PUBLISH_MATRIX: ${{ steps.unpublished.outputs.matrix }}
         run: |
           set -euo pipefail
           docker logout ghcr.io
-          jq -r '.variants[].ref | split(":")[0]' .github/cookbook-image-matrix.json | sort -u | \
+          jq -r '.include[].ref | split(":")[0]' <<<"$PUBLISH_MATRIX" | sort -u | \
           while read -r repository; do
             if ! docker buildx imagetools inspect "${repository}:access-${GITHUB_SHA}" >/dev/null; then
               echo "error: $repository is not publicly readable; make the package public before releasing" >&2
@@ -158,7 +179,7 @@ jobs:
 
   build-release:
     name: build release (${{ matrix.cookbook }}:${{ matrix.cuda }})
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs.preflight.outputs.has_unpublished == 'true'
     needs: [contract, preflight]
     runs-on: ubuntu-22.04
     permissions:
@@ -166,7 +187,7 @@ jobs:
       packages: write
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.contract.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.preflight.outputs.matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -212,15 +233,15 @@ jobs:
 
   promote:
     name: publish (${{ matrix.cookbook }}:${{ matrix.cuda }})
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: [contract, build-release]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs.preflight.outputs.has_unpublished == 'true'
+    needs: [contract, preflight, build-release]
     runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: write
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.contract.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.preflight.outputs.matrix) }}
     steps:
       - name: Log in to GHCR
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
