@@ -1,8 +1,10 @@
 import json
+import os
 import re
 import subprocess
 import tarfile
 import tempfile
+import textwrap
 import unittest
 from pathlib import Path
 
@@ -118,6 +120,75 @@ class PublishingWorkflowTest(unittest.TestCase):
         self.assertIn("ai.labpod.image.build-input-digest", self.workflow)
         self.assertIn("scripts/definition-digest.py", self.workflow)
         self.assertIn("definition_digest", self.workflow)
+
+    def test_preflight_skips_matching_tags_and_rejects_conflicting_tags(self):
+        preflight = self.workflow.split("  preflight:\n", 1)[1].split("  build-pr:\n", 1)[0]
+        guard = preflight.split("      - name: Refuse to overwrite immutable release tags\n", 1)[1]
+        script = textwrap.dedent(re.search(r"        run: \|\n((?:          .*\n|\n)+)", guard)[1])
+        # Run the actual workflow shell offline; every Docker call is intercepted.
+        mock_docker = """
+docker() {
+  [[ "$1 $2 $3" == 'buildx imagetools inspect' ]] || return 2
+  jq -e --arg ref "$4" 'has($ref)' <<<"$PUBLISHED" >/dev/null || return 1
+  if (( $# > 4 )); then
+    [[ "$5 $6" == '--format {{json .Image.Config.Labels}}' ]] || return 2
+    jq -c --arg ref "$4" '.[$ref]' <<<"$PUBLISHED"
+  fi
+}
+"""
+        variants = self.matrix["variants"]
+        label = "ai.labpod.image.build-input-digest"
+        published = {variant["ref"]: {label: variant["definition_digest"]} for variant in variants}
+        unpublished = [variants[0], variants[3], variants[4]]
+        mixed = {ref: labels for ref, labels in published.items() if ref not in {v["ref"] for v in unpublished}}
+        for name, existing, expected in (
+            ("all published", published, []),
+            ("mixed", mixed, unpublished),
+            ("all unpublished", {}, variants),
+            ("digest mismatch", {**published, variants[0]["ref"]: {label: "sha256:" + "0" * 64}}, None),
+            ("missing label", {**published, variants[0]["ref"]: {}}, None),
+            ("null labels", {**published, variants[0]["ref"]: None}, None),
+        ):
+            with self.subTest(case=name), tempfile.TemporaryDirectory() as temporary:
+                output = Path(temporary) / "output"
+                output.touch()
+                result = subprocess.run(
+                    ["bash", "-c", mock_docker + script],
+                    cwd=ROOT,
+                    env={**os.environ, "PUBLISHED": json.dumps(existing), "GITHUB_OUTPUT": str(output)},
+                    capture_output=True,
+                    text=True,
+                )
+                if expected is None:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("immutable release tag", result.stderr)
+                    self.assertEqual(output.read_text(), "")
+                else:
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    outputs = dict(line.split("=", 1) for line in output.read_text().splitlines())
+                    self.assertIn("matrix", outputs)
+                    self.assertIn("has_unpublished", outputs)
+                    self.assertEqual(json.loads(outputs["matrix"]), {"include": expected})
+                    self.assertEqual(outputs["has_unpublished"], str(bool(expected)).lower())
+
+    def test_release_jobs_and_access_probes_use_only_the_unpublished_matrix(self):
+        preflight = self.workflow.split("  preflight:\n", 1)[1].split("  build-pr:\n", 1)[0]
+        self.assertIn("matrix: ${{ steps.unpublished.outputs.matrix }}", preflight)
+        self.assertIn("has_unpublished: ${{ steps.unpublished.outputs.has_unpublished }}", preflight)
+        self.assertIn("id: unpublished", preflight)
+        for name in ("Publish an access probe for every package", "Verify every package pulls anonymously"):
+            step = preflight.split(f"      - name: {name}\n", 1)[1].split("      - name:", 1)[0]
+            self.assertIn("if: steps.unpublished.outputs.has_unpublished == 'true'", step)
+            self.assertIn("PUBLISH_MATRIX: ${{ steps.unpublished.outputs.matrix }}", step)
+            self.assertIn(".include[].ref", step)
+            self.assertNotIn(".github/cookbook-image-matrix.json", step)
+        for name in ("build-release", "promote"):
+            job = re.split(r"\n  [a-z-]+:\n", self.workflow.split(f"  {name}:\n", 1)[1], 1)[0]
+            self.assertIn("needs.preflight.outputs.has_unpublished == 'true'", job)
+            self.assertRegex(job, r"needs: \[[^\]\n]*\bpreflight\b[^\]\n]*\]")
+            self.assertIn("matrix: ${{ fromJSON(needs.preflight.outputs.matrix) }}", job)
+        pr_job = self.workflow.split("  build-pr:\n", 1)[1].split("  build-release:\n", 1)[0]
+        self.assertIn("matrix: ${{ fromJSON(needs.contract.outputs.matrix) }}", pr_job)
 
 
 class DefinitionDigestTest(unittest.TestCase):
